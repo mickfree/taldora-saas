@@ -66,13 +66,7 @@ class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-3 w-full max-w-sm point
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95"
-             class="pointer-events-auto relative overflow-hidden flex items-start gap-3 p-4 rounded-xl border bg-white/90 dark:bg-brandBg/95 border-slate-200/80 dark:border-brandHover/80 backdrop-blur-md shadow-lg dark:shadow-black/20 transition-all duration-300"
-             :class="{
-                 'border-emerald-100 dark:border-emerald-950/30 bg-emerald-50/40 dark:bg-emerald-950/10 text-emerald-800 dark:text-emerald-200': toast.tags.includes('success'),
-                 'border-rose-100 dark:border-rose-950/30 bg-rose-50/40 dark:bg-rose-950/10 text-rose-800 dark:text-rose-200': toast.tags.includes('error') || toast.tags.includes('danger'),
-                 'border-amber-100 dark:border-amber-950/30 bg-amber-50/40 dark:bg-amber-950/10 text-amber-800 dark:text-amber-200': toast.tags.includes('warning'),
-                 'border-blue-100 dark:border-blue-950/30 bg-blue-50/40 dark:bg-blue-950/10 text-blue-800 dark:text-blue-200': toast.tags.includes('info') || (!toast.tags.includes('success') && !toast.tags.includes('error') && !toast.tags.includes('warning'))
-             }">
+             class="pointer-events-auto relative overflow-hidden flex items-start gap-3 p-4 rounded-xl border bg-white/90 dark:bg-brandBg/95 border-slate-200/80 dark:border-brandHover/80 backdrop-blur-md shadow-lg dark:shadow-black/20 transition-all duration-300">
             
             <!-- Icon -->
             <div class="flex-shrink-0 mt-0.5">

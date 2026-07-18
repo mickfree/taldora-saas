@@ -1,0 +1,22 @@
+<!-- templates/cotton/ui/breadcrumbs_item.html -->
+<li class="inline-flex items-center gap-1 md:gap-1.5 [&:first-child>.separator]:hidden">
+    <span class="separator text-slate-400 dark:text-brandMuted/40 flex items-center justify-center select-none" aria-hidden="true">
+        <c-ui.icon name="chevron-right" class="text-[10px]" />
+    </span>
+
+    {% if attrs.href and not attrs.active %}
+        <a href="{{ attrs.href }}" class="inline-flex items-center gap-1 hover:text-slate-800 dark:hover:text-white transition-colors duration-150">
+            {% if attrs.icon %}
+                <c-ui.icon name="{{ attrs.icon }}" class="text-sm" />
+            {% endif %}
+            <span>{{ attrs.label|default:slot }}</span>
+        </a>
+    {% else %}
+        <span class="inline-flex items-center gap-1 {% if attrs.active %}text-slate-800 dark:text-white font-semibold{% else %}text-slate-400 dark:text-brandMuted/60{% endif %}">
+            {% if attrs.icon %}
+                <c-ui.icon name="{{ attrs.icon }}" class="text-sm" />
+            {% endif %}
+            <span>{{ attrs.label|default:slot }}</span>
+        </span>
+    {% endif %}
+</li>

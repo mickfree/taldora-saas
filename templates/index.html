@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
-{% block page_title %}Home{% endblock %}
+
+{% block breadcrumbs %}
+<c-ui.breadcrumbs>
+    {% block page_title %}Home{% endblock %}
+</c-ui.breadcrumbs>
+{% endblock %}
+
 
 {% block content %}
 
