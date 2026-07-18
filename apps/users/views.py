@@ -25,7 +25,7 @@ def settings_profile_edit(request):
         else:
             messages.error(request, 'Por favor, corrige los errores abajo.')
             if request.headers.get('HX-Request') == 'true':
-                return render(request, 'settings/partials/profile_form.html', {'form': form})
+                return render(request, 'settings/profile_edit.html', {'form': form})
     else:
         form = UserProfileForm(instance=request.user)
         
@@ -42,6 +42,7 @@ def settings_password_change(request):
         if form.is_valid():
             form.save()
             finalize_password_change(request, request.user)
+            messages.success(request, 'Tu contraseña se ha cambiado correctamente.')
             if request.headers.get('HX-Request') == 'true':
                 context = {'form': form}
                 return render(request, 'settings/partials/profile_detail.html', context)

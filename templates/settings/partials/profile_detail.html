@@ -1,44 +1,9 @@
 <div id="profile-detail">
     <!-- Header -->
-<div class="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-brandHover/50">
-    <div class="h-10 w-10 rounded-full bg-primary-50 border border-primary-200 dark:bg-brandHover dark:border-brandHover flex items-center justify-center text-primary-600 dark:text-brandAccent font-bold text-sm">
-        {{ user.email|default:user.username|slice:":1"|upper }}
-    </div>
-    <div>
-        <h2 class="text-sm font-bold text-slate-800 dark:text-white">Detalles del Perfil</h2>
-        <p class="text-[10px] text-slate-400 dark:text-brandMuted/60">Información personal de tu cuenta.</p>
-    </div>
-</div>
-
-<!-- Info Card -->
-<div class="bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover rounded-2xl p-6 space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Nombre Completo -->
-        <div>
-            <span class="block text-[10px] uppercase font-bold text-slate-400 dark:text-brandMuted/50 tracking-wider">Nombre Completo</span>
-            <span class="text-xs font-semibold text-slate-800 dark:text-white mt-1.5 block">
-                {{ user.get_full_name|default:"No especificado" }}
-            </span>
-        </div>
-
-        <!-- Nombre de Usuario -->
-        <div>
-            <span class="block text-[10px] uppercase font-bold text-slate-400 dark:text-brandMuted/50 tracking-wider">Nombre de Usuario</span>
-            <span class="text-xs font-semibold text-slate-800 dark:text-white mt-1.5 block">
-                {{ user.username }}
-            </span>
-        </div>
-
-        <!-- Correo Electrónico -->
-        <div class="md:col-span-2">
-            <span class="block text-[10px] uppercase font-bold text-slate-400 dark:text-brandMuted/50 tracking-wider">Correo Electrónico</span>
-            <span class="text-xs font-semibold text-slate-800 dark:text-white mt-1.5 block">
-                {{ user.email }}
-            </span>
-        </div>
-    </div>
-
-    <div class="border-t border-slate-100 dark:border-brandHover/50 pt-5 flex flex-wrap gap-3">
+    <c-ui.header title="Detalles del Perfil" description="Información personal de tu cuenta.">
+        <c-slot name="icon">
+            <c-ui.icon name="user" class="text-sm" />
+        </c-slot>
         <c-ui.button_hx
             type="button"
             hx_get="{% url 'settings_profile_edit' %}"
@@ -61,7 +26,34 @@
             <c-ui.icon name="key" class="text-sm" />
             Cambiar Contraseña
         </c-ui.button_hx>
+    </c-ui.header>
 
+    <!-- Info Card -->
+    <div class="bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover rounded-2xl p-4 max-w-sm">
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <!-- Nombre Completo -->
+            <div>
+                <span class="block text-[10px] uppercase font-bold text-slate-400 dark:text-brandMuted/50 tracking-wider">Nombre Completo</span>
+                <span class="text-xs font-semibold text-slate-800 dark:text-white mt-1.5 block">
+                    {{ user.get_full_name|default:"--" }}
+                </span>
+            </div>
+
+            <!-- Nombre de Usuario -->
+            <div>
+                <span class="block text-[10px] uppercase font-bold text-slate-400 dark:text-brandMuted/50 tracking-wider">Nombre de Usuario</span>
+                <span class="text-xs font-semibold text-slate-800 dark:text-white mt-1.5 block">
+                    {{ user.username|default:"--" }}
+                </span>
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div>
+                <span class="block text-[10px] uppercase font-bold text-slate-400 dark:text-brandMuted/50 tracking-wider">Correo Electrónico</span>
+                <span class="text-xs font-semibold text-slate-800 dark:text-white mt-1.5 block">
+                    {{ user.email|default:"--" }}
+                </span>
+            </div>
+        </div>
     </div>
-</div>
 </div>

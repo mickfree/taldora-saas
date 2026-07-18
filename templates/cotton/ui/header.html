@@ -1,0 +1,21 @@
+<!-- templates/cotton/ui/header.html -->
+<div class="flex items-center justify-between gap-3 pb-3 {{ attrs.class }}">
+    <div class="flex items-center gap-2 ">
+        {% if icon %}
+            <div class="h-7 w-7 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-brandHover dark:hover:bg-brandBg border border-slate-300 dark:border-brandHover text-slate-700 dark:text-brandMuted hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95">
+                {{ icon }}
+            </div>
+        {% endif %}
+        <div>
+            <h2 class="text-sm font-bold text-slate-800 dark:text-white">{{ attrs.title }}</h2>
+            {% if attrs.description %}
+                <p class="text-[10px] text-slate-400 dark:text-brandMuted/60">{{ attrs.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div>
+        {% if slot %}
+            {{ slot }}
+        {% endif %}
+    </div>
+</div>
