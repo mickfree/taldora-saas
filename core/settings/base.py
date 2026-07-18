@@ -39,7 +39,16 @@ INSTALLED_APPS = [
 
     # Apps
     'apps.users',
+
+    # Tailwind
+    'tailwind',
+    'theme',
 ]
+
+# Tailwind CSS Configuration
+TAILWIND_APP_NAME = "theme"
+
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
