@@ -31,7 +31,7 @@
             hx_target="#container-profile"
             hx_select="#profile-detail"
             hx_swap="innerHTML"
-            class="bg-slate-100 hover:bg-slate-200 dark:bg-brandHover dark:hover:bg-brandHover/80 text-slate-700 dark:text-white text-xs font-semibold px-4 py-2.5 rounded-lg active:scale-95 transition-all">
+            class="btn-ghost">
             Cancelar
         </c-ui.button_hx>
         
@@ -40,7 +40,7 @@
             hx_post="{% url 'settings_profile_edit' %}"
             hx_target="#profile-form"
             hx_swap="innerHTML"
-            class="bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold px-4 py-2.5 rounded-lg active:scale-95 transition-all">
+            class="btn-confirm">
             Guardar Cambios
         </c-ui.button_hx>
     </div>

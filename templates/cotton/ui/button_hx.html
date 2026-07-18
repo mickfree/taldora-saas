@@ -1,5 +1,5 @@
 <button type="{{ attrs.type|default:'button' }}"
-        class="bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold px-4 py-2.5 rounded-lg active:scale-95 transition-all"
+        class="{{ attrs.class }}"
         {% if attrs.onclick %} @click="{{ attrs.onclick }}" {% endif %}
         {% if attrs.hx_get %} hx-get="{{ attrs.hx_get }}" {% endif %}
         {% if attrs.hx_post %} hx-post="{{ attrs.hx_post }}" {% endif %}

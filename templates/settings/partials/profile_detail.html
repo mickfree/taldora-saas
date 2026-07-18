@@ -45,6 +45,7 @@
             hx_target="#container-profile"
             hx_select="#profile-form"
             hx_swap="innerHTML"
+            class="btn-primary"
             >
             <c-ui.icon name="user-edit" class="text-sm" />
             Editar Perfil
@@ -55,7 +56,8 @@
             hx_get="{% url 'settings_password_change' %}"
             hx_target="#container-profile"
             hx_select="#password-change-form"
-            hx_swap="innerHTML">
+            hx_swap="innerHTML"
+            class="btn-primary">
             <c-ui.icon name="key" class="text-sm" />
             Cambiar Contraseña
         </c-ui.button_hx>
