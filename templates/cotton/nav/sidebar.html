@@ -12,7 +12,7 @@
                 <button x-show="collapsed" @click="toggleCollapse()"
                     class="h-7 w-7 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-brandHover dark:hover:bg-brandBg border border-slate-200 dark:border-brandHover text-slate-500 dark:text-brandMuted hover:text-slate-800 dark:hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95"
                     x-cloak>
-                    <c-icon name="ti ti-layout-sidebar-left-expand" class="text-lg" />
+                    <c-ui.icon name="layout-sidebar-left-expand" class="text-lg" />
                 </button>
 
                 <span class="text-sm uppercase font-bold whitespace-nowrap" x-show="!collapsed"
@@ -27,7 +27,7 @@
             <button x-show="!collapsed" @click="toggleCollapse()"
                 class="h-6 w-6 rounded-lg bg-slate-100/50 hover:bg-slate-200/80 dark:bg-brandHover/50 dark:border-brandHover text-slate-500 dark:text-brandMuted hover:text-slate-800 dark:hover:text-white flex items-center justify-center hover:bg-brandHover transition-all hover:scale-105 active:scale-95"
                 x-transition x-cloak>
-                <c-icon name="ti ti-layout-sidebar-right-expand" class="text-lg" />
+                <c-ui.icon name="layout-sidebar-right-expand" class="text-lg" />
             </button>
         </div>
 
@@ -35,14 +35,14 @@
         <div class="px-3 pt-3">
             <!-- Buscador cuando está expandido -->
             <div class="relative flex items-center" x-show="!collapsed" x-transition x-cloak>
-                <c-icon name="search" class="absolute left-3 text-slate-400 dark:text-brandMuted text-xs" />
+                <c-ui.icon name="search" class="absolute left-3 text-slate-400 dark:text-brandMuted text-xs" />
                 <input type="text" placeholder="Buscar..." x-model="searchQuery" x-ref="searchInput"
                     class="w-full pl-8 pr-8 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-primary-500 dark:bg-brandHover/30 dark:border-brandHover dark:text-white dark:placeholder-brandMuted dark:focus:border-brandAccent transition-all" />
                 <!-- Botón para limpiar búsqueda -->
                 <button x-show="searchQuery" @click="clearSearch()"
                     class="absolute right-3 text-slate-400 hover:text-slate-600 dark:text-brandMuted dark:hover:text-white transition-colors"
                     x-cloak x-transition>
-                    <i class="ti ti-x text-xs"></i>
+                    <c-ui.icon name="x" class="text-xs" />
                 </button>
             </div>
 
@@ -50,7 +50,7 @@
             <div class="flex justify-center" x-show="collapsed" x-cloak>
                 <button @click="expandAndFocus()"
                     class="h-8 w-8 rounded-xl bg-slate-100 border border-slate-200 dark:bg-brandHover/30 dark:border-brandHover flex items-center justify-center text-slate-500 dark:text-brandMuted hover:text-slate-800 dark:hover:text-white transition-all group relative">
-                    <c-icon name="search" class="text-sm group-hover:text-brandAccent" />
+                    <c-ui.icon name="search" class="text-sm group-hover:text-brandAccent" />
                     <span
                         class="absolute left-16 bg-white dark:bg-brandHover border border-slate-200 dark:border-brandHover text-slate-700 dark:text-white text-[10px] px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50"
                         x-show="collapsed">Buscar...</span>
@@ -61,23 +61,23 @@
         <!-- Menú / Módulos -->
         <nav class="py-4 px-3 space-y-1.5">
             <!-- Inicio -->
-            <c-sidebar-item href="/" icon="layout-dashboard" label="Dashboard" />
+            <c-nav.sidebar-item href="/" icon="layout-dashboard" label="Dashboard" />
 
             <!-- Módulos (Con submódulos) -->
-            <c-sidebar-item icon="box" label="Comercial" :active="request.path|slice:':9' == '/modules/'">
-                <c-sidebar-subitem href="#" label="Proformas" icon="layout-dashboard" class="text-base" />
-                <c-sidebar-subitem href="#" label="Tabla de Precios" icon="plus" class="text-base" />
-                <c-sidebar-subitem href="#" label="Configuración" icon="settings" class="text-base" />
-            </c-sidebar-item>
+            <c-nav.sidebar-item icon="box" label="Comercial" :active="request.path|slice:':9' == '/modules/'">
+                <c-nav.sidebar-subitem href="#" label="Proformas" icon="layout-dashboard" class="text-base" />
+                <c-nav.sidebar-subitem href="#" label="Tabla de Precios" icon="plus" class="text-base" />
+                <c-nav.sidebar-subitem href="#" label="Configuración" icon="settings" class="text-base" />
+            </c-nav.sidebar-item>
 
             <!-- Usuarios -->
-            <c-sidebar-item href="#" icon="users" label="Usuarios" />
+            <c-nav.sidebar-item href="#" icon="users" label="Usuarios" />
 
             <!-- Analíticas -->
-            <c-sidebar-item href="#" icon="chart-bar" label="Analíticas" />
+            <c-nav.sidebar-item href="#" icon="chart-bar" label="Analíticas" />
 
             <!-- Configuración -->
-            <c-sidebar-item href="#" icon="settings" label="Configuración" />
+            <c-nav.sidebar-item href="#" icon="settings" label="Configuración" />
         </nav>
     </div>
 

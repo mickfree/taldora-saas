@@ -41,7 +41,7 @@
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
     <!-- Componente de Barra Lateral (Sidebar) -->
-    <c-sidebar />
+    <c-nav.sidebar />
 
     <!-- Panel de Contenido Principal (Derecha) -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -57,14 +57,14 @@
                 <nav class="hidden md:flex items-center gap-2">
 
                     <!-- Componente de Tema -->
-                    <c-theme-toggle />
+                    <c-ui.theme-toggle />
                     <span class="text-xs text-slate-200 dark:text-brandHover">|</span>
-                    <c-user-menu />
+                    <c-nav.user-menu />
 
                 </nav>
 
                 <!-- Menú Móvil en Alpine.js -->
-                <c-mobile-menu />
+                <c-nav.mobile-menu />
             </div>
         </header>
 

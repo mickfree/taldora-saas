@@ -6,7 +6,7 @@
         <!-- Ítem simple de navegación -->
         <a href="{{ attrs.href }}"
             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group relative min-w-0 {% if attrs.active or request.path == attrs.href %}text-primary-600 bg-slate-100 dark:text-brandAccent dark:bg-brandHover{% else %}text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover{% endif %}">
-            <c-icon name="{{ attrs.icon }}" class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
+            <c-ui.icon name="{{ attrs.icon }}" class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
             <span x-show="!collapsed" x-transition class="truncate block text-left flex-1">{{ attrs.label }}</span>
             
             <!-- Tooltip cuando está colapsado -->
@@ -19,14 +19,14 @@
         <button @click="open = !open" type="button"
             class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group relative min-w-0 {% if attrs.active %}text-primary-600 bg-slate-100 dark:text-brandAccent dark:bg-brandHover{% else %}text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover{% endif %}">
             <div class="flex items-center gap-3 min-w-0 flex-1">
-                <c-icon name="{{ attrs.icon }}" class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
+                <c-ui.icon name="{{ attrs.icon }}" class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
                 <span x-show="!collapsed" x-transition class="truncate text-left block flex-1">{{ attrs.label }}</span>
             </div>
             
             <!-- Flecha de colapso -->
             {% if attrs.show_arrow != 'False' and attrs.show_arrow != False %}
             <div x-show="!collapsed" x-transition class="transition-transform duration-200 flex-shrink-0" :class="{ 'rotate-180': open }">
-                <c-icon name="ti ti-chevron-down" class="text-[10px] text-slate-400 dark:text-brandMuted group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
+                <c-ui.icon name="chevron-down" class="text-[10px] text-slate-400 dark:text-brandMuted group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
             </div>
             {% endif %}
 

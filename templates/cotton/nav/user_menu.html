@@ -7,7 +7,7 @@
                 {{ user.email|default:user.username|slice:":1"|upper }}
             </div>
             <span class="max-w-[150px] truncate">{{ user.email|default:user.username }}</span>
-            <c-icon name="chevron-down" class="text-[10px] text-slate-400 dark:text-brandMuted transition-transform duration-200" :class="{ 'rotate-180': open }" />
+            <c-ui.icon name="chevron-down" class="text-[10px] text-slate-400 dark:text-brandMuted transition-transform duration-200" :class="{ 'rotate-180': open }" />
         </button>
 
         <div x-show="open" 
@@ -21,14 +21,14 @@
              class="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover p-1 shadow-lg z-50"
              x-cloak>
             <a href="/admin/" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-50 dark:hover:bg-brandHover/50 rounded-lg transition-colors">
-                <c-icon name="shield-lock" class="text-sm" />
+                <c-ui.icon name="shield-lock" class="text-sm" />
                 Admin Panel
             </a>
             <div class="border-t border-slate-100 dark:border-brandHover my-1"></div>
             <form action="{% url 'account_logout' %}" method="post" class="block w-full">
                 {% csrf_token %}
                 <button type="submit" class="flex items-center gap-2 w-full text-left px-3 py-2 text-xs text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg transition-colors">
-                    <c-icon name="logout" class="text-sm" />
+                    <c-ui.icon name="logout" class="text-sm" />
                     Cerrar Sesión
                 </button>
             </form>
