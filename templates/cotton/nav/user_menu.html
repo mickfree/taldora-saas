@@ -20,10 +20,6 @@
              x-transition:leave-end="transform opacity-0 scale-95"
              class="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover p-1 shadow-lg z-50"
              x-cloak>
-            <a href="/admin/" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-50 dark:hover:bg-brandHover/50 rounded-lg transition-colors">
-                <c-ui.icon name="shield-lock" class="text-sm" />
-                Admin Panel
-            </a>
             <a href="{% url 'settings_profile' %}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-50 dark:hover:bg-brandHover/50 rounded-lg transition-colors">
                 <c-ui.icon name="user" class="text-sm" />
                 Perfil
