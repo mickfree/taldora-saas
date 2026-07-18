@@ -10,7 +10,6 @@ urlpatterns = [
     
     # Core app urls
     path('', views.home, name='home'),
-    path('htmx-demo-time/', views.htmx_demo_time, name='htmx_demo_time'),
 ]
 
 # Incluir rutas de desarrollo solo si DEBUG está activado

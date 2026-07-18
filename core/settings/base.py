@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    # Apps
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +100,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
 SITE_ID = 1
 
 # django-allauth Configuration
