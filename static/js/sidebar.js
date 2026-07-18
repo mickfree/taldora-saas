@@ -62,7 +62,7 @@ document.addEventListener('alpine:init', () => {
             if (!this.searchQuery) return true;
             const query = this.searchQuery.toLowerCase();
             if (this.label.toLowerCase().includes(query)) return true;
-            
+
             // Verifica si algún sub-ítem coincide con la búsqueda
             const subItems = this.$el.querySelectorAll('[data-sub-label]');
             return Array.from(subItems).some(sub => {

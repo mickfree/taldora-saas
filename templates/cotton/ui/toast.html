@@ -1,0 +1,118 @@
+<div x-data="{
+    toasts: [],
+    add(message, tags = 'info') {
+        const id = Date.now() + Math.random().toString(36).substr(2, 9);
+        const duration = 5000;
+        const intervalTime = 50;
+        const steps = duration / intervalTime;
+        
+        const toast = {
+            id: id,
+            message: message,
+            tags: tags,
+            show: false,
+            progress: 100
+        };
+        
+        this.toasts.push(toast);
+        
+        // Trigger entrance transition
+        this.$nextTick(() => {
+            const t = this.toasts.find(x => x.id === id);
+            if (t) t.show = true;
+        });
+
+        // Progress bar decrement and auto-dismiss
+        const interval = setInterval(() => {
+            const t = this.toasts.find(x => x.id === id);
+            if (!t) {
+                clearInterval(interval);
+                return;
+            }
+            t.progress -= (100 / steps);
+            if (t.progress <= 0) {
+                clearInterval(interval);
+                this.remove(id);
+            }
+        }, intervalTime);
+    },
+    remove(id) {
+        const t = this.toasts.find(x => x.id === id);
+        if (t) {
+            t.show = false;
+            // Wait for transition out before removing from array
+            setTimeout(() => {
+                this.toasts = this.toasts.filter(x => x.id !== id);
+            }, 300);
+        }
+    }
+}"
+@show-toasts.window="($event.detail.value || $event.detail).forEach(t => add(t.message, t.tags))"
+@show-toast.window="add($event.detail.message || $event.detail.value || $event.detail, $event.detail.tags || 'info')"
+x-init="
+    {% if messages %}
+        {% for message in messages %}
+            add('{{ message|escapejs }}', '{{ message.tags }}');
+        {% endfor %}
+    {% endif %}
+"
+class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-3 w-full max-w-sm pointer-events-none">
+    
+    <template x-for="toast in toasts" :key="toast.id">
+        <div x-show="toast.show"
+             x-transition:enter="transform ease-out duration-300 transition"
+             x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-4"
+             x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="pointer-events-auto relative overflow-hidden flex items-start gap-3 p-4 rounded-xl border bg-white/90 dark:bg-brandBg/95 border-slate-200/80 dark:border-brandHover/80 backdrop-blur-md shadow-lg dark:shadow-black/20 transition-all duration-300"
+             :class="{
+                 'border-emerald-100 dark:border-emerald-950/30 bg-emerald-50/40 dark:bg-emerald-950/10 text-emerald-800 dark:text-emerald-200': toast.tags.includes('success'),
+                 'border-rose-100 dark:border-rose-950/30 bg-rose-50/40 dark:bg-rose-950/10 text-rose-800 dark:text-rose-200': toast.tags.includes('error') || toast.tags.includes('danger'),
+                 'border-amber-100 dark:border-amber-950/30 bg-amber-50/40 dark:bg-amber-950/10 text-amber-800 dark:text-amber-200': toast.tags.includes('warning'),
+                 'border-blue-100 dark:border-blue-950/30 bg-blue-50/40 dark:bg-blue-950/10 text-blue-800 dark:text-blue-200': toast.tags.includes('info') || (!toast.tags.includes('success') && !toast.tags.includes('error') && !toast.tags.includes('warning'))
+             }">
+            
+            <!-- Icon -->
+            <div class="flex-shrink-0 mt-0.5">
+                <template x-if="toast.tags.includes('success')">
+                    <i class="ti ti-circle-check text-lg text-emerald-500"></i>
+                </template>
+                <template x-if="toast.tags.includes('error') || toast.tags.includes('danger')">
+                    <i class="ti ti-circle-x text-lg text-rose-500"></i>
+                </template>
+                <template x-if="toast.tags.includes('warning')">
+                    <i class="ti ti-alert-triangle text-lg text-amber-500"></i>
+                </template>
+                <template x-if="toast.tags.includes('info') || (!toast.tags.includes('success') && !toast.tags.includes('error') && !toast.tags.includes('warning'))">
+                    <i class="ti ti-info-circle text-lg text-blue-500"></i>
+                </template>
+            </div>
+
+            <!-- Message Text -->
+            <div class="flex-1 text-xs font-semibold leading-5 text-slate-800 dark:text-slate-100" x-text="toast.message"></div>
+
+            <!-- Close Button -->
+            <button @click="remove(toast.id)" class="flex-shrink-0 text-slate-400 hover:text-slate-600 dark:text-brandMuted dark:hover:text-white transition-colors duration-150 p-0.5 rounded-md hover:bg-slate-100 dark:hover:bg-brandHover">
+                <i class="ti ti-x text-xs"></i>
+            </button>
+
+            <!-- Progress Bar -->
+            <div class="absolute bottom-0 left-0 h-[3px] w-full bg-slate-100/50 dark:bg-brandHover/30 overflow-hidden">
+                <div class="h-full transition-all ease-linear"
+                     :class="{
+                         'bg-emerald-500': toast.tags.includes('success'),
+                         'bg-rose-500': toast.tags.includes('error') || toast.tags.includes('danger'),
+                         'bg-amber-500': toast.tags.includes('warning'),
+                         'bg-blue-500': toast.tags.includes('info') || (!toast.tags.includes('success') && !toast.tags.includes('error') && !toast.tags.includes('warning'))
+                     }"
+                     :style="{ 
+                         width: toast.progress + '%',
+                         transition: 'width 50ms linear'
+                     }">
+                </div>
+            </div>
+        </div>
+    </template>
+</div>

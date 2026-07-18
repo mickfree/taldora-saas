@@ -1,0 +1,14 @@
+<button type="{{ attrs.type|default:'button' }}"
+        class="bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold px-4 py-2.5 rounded-lg active:scale-95 transition-all"
+        {% if attrs.onclick %} @click="{{ attrs.onclick }}" {% endif %}
+        {% if attrs.hx_get %} hx-get="{{ attrs.hx_get }}" {% endif %}
+        {% if attrs.hx_post %} hx-post="{{ attrs.hx_post }}" {% endif %}
+        {% if attrs.hx_put %} hx-put="{{ attrs.hx_put }}" {% endif %}
+        {% if attrs.hx_delete %} hx-delete="{{ attrs.hx_delete }}" {% endif %}
+        {% if attrs.hx_target %} hx-target="{{ attrs.hx_target }}" {% endif %}
+        {% if attrs.hx_select %} hx-select="{{ attrs.hx_select }}" {% endif %}
+        {% if attrs.hx_swap %} hx-swap="{{ attrs.hx_swap|default:'innerHTML' }}" {% endif %}
+        hx-indicator="next .htmx-indicator"
+        {{ attributes }}>
+    {{ slot }}
+</button>

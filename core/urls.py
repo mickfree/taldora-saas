@@ -8,6 +8,9 @@ urlpatterns = [
     # django-allauth urls
     path('accounts/', include('allauth.urls')),
     
+    # User settings urls
+    path('settings/', include('apps.users.urls')),
+    
     # Core app urls
     path('', views.home, name='home'),
 ]

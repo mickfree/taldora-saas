@@ -1,50 +1,53 @@
 <!-- templates/cotton/sidebar_item.html -->
-<div x-data="sidebarItemComponent('{{ attrs.label|escapejs }}')" 
-     x-show="matchesSearch()"
-     class="relative group">
+<div x-data="sidebarItemComponent('{{ attrs.label|escapejs }}')" x-show="matchesSearch()" class="relative group">
     {% if attrs.href %}
-        <!-- Ítem simple de navegación -->
-        <a href="{{ attrs.href }}"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group relative min-w-0 {% if attrs.active or request.path == attrs.href %}text-primary-600 bg-slate-100 dark:text-brandAccent dark:bg-brandHover{% else %}text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover{% endif %}">
-            <c-ui.icon name="{{ attrs.icon }}" class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
-            <span x-show="!collapsed" x-transition class="truncate block text-left flex-1">{{ attrs.label }}</span>
-            
-            <!-- Tooltip cuando está colapsado -->
-            <span
-                class="absolute left-16 bg-white dark:bg-brandHover border border-slate-200 dark:border-brandHover text-slate-700 dark:text-white text-[10px] px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50"
-                x-show="collapsed">{{ attrs.label }}</span>
-        </a>
+    <!-- Ítem simple de navegación -->
+    <a href="{{ attrs.href }}"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group relative min-w-0 {% if attrs.active or request.path == attrs.href %}text-primary-600 bg-slate-100 dark:text-brandAccent dark:bg-brandHover{% else %}text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover{% endif %}">
+        <c-ui.icon name="{{ attrs.icon }}"
+            class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
+        <span x-show="!collapsed" x-transition class="truncate block text-left flex-1">{{ attrs.label }}</span>
+
+        <!-- Tooltip cuando está colapsado -->
+        <span
+            class="absolute left-16 bg-white dark:bg-brandHover border border-slate-200 dark:border-brandHover text-slate-700 dark:text-white text-[10px] px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50"
+            x-show="collapsed">{{ attrs.label }}</span>
+    </a>
     {% else %}
-        <!-- Ítem con submódulos (Dropdown Toggle) -->
-        <button @click="open = !open" type="button"
-            class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group relative min-w-0 {% if attrs.active %}text-primary-600 bg-slate-100 dark:text-brandAccent dark:bg-brandHover{% else %}text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover{% endif %}">
-            <div class="flex items-center gap-3 min-w-0 flex-1">
-                <c-ui.icon name="{{ attrs.icon }}" class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
-                <span x-show="!collapsed" x-transition class="truncate text-left block flex-1">{{ attrs.label }}</span>
-            </div>
-            
-            <!-- Flecha de colapso -->
-            {% if attrs.show_arrow != 'False' and attrs.show_arrow != False %}
-            <div x-show="!collapsed" x-transition class="transition-transform duration-200 flex-shrink-0" :class="{ 'rotate-180': open }">
-                <c-ui.icon name="chevron-down" class="text-[10px] text-slate-400 dark:text-brandMuted group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
-            </div>
-            {% endif %}
-
-            <!-- Menú flotante cuando está colapsado -->
-            <div x-show="collapsed"
-                class="absolute left-16 top-0 w-48 bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover shadow-xl rounded-xl py-2 z-50 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 text-left pointer-events-auto">
-                <div class="px-3 py-1.5 text-[10px] text-center font-bold uppercase tracking-wider text-slate-800 dark:text-brandMuted border-b border-slate-100 dark:border-brandHover/50 mb-1 truncate">
-                    {{ attrs.label }}
-                </div>
-                <div class="space-y-1 px-1">
-                    {{ slot }}
-                </div>
-            </div>
-        </button>
-
-        <!-- Contenedor de submódulos cuando está expandido -->
-        <div x-show="open && !collapsed" x-transition class="pl-8 pr-2 py-1 space-y-1">
-            {{ slot }}
+    <!-- Ítem con submódulos (Dropdown Toggle) -->
+    <button @click="open = !open" type="button"
+        class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group relative min-w-0 {% if attrs.active %}text-primary-600 bg-slate-100 dark:text-brandAccent dark:bg-brandHover{% else %}text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover{% endif %}">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+            <c-ui.icon name="{{ attrs.icon }}"
+                class="text-base flex-shrink-0 group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
+            <span x-show="!collapsed" x-transition class="truncate text-left block flex-1">{{ attrs.label }}</span>
         </div>
+
+        <!-- Flecha de colapso -->
+        {% if attrs.show_arrow != 'False' and attrs.show_arrow != False %}
+        <div x-show="!collapsed" x-transition class="transition-transform duration-200 flex-shrink-0"
+            :class="{ 'rotate-180': open }">
+            <c-ui.icon name="chevron-down"
+                class="text-[10px] text-slate-400 dark:text-brandMuted group-hover:text-primary-600 dark:group-hover:text-brandAccent" />
+        </div>
+        {% endif %}
+
+        <!-- Menú flotante cuando está colapsado -->
+        <div x-show="collapsed"
+            class="absolute left-16 top-0 w-48 bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover shadow-xl rounded-xl py-2 z-50 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 text-left pointer-events-auto">
+            <div
+                class="px-3 py-1.5 text-[10px] text-center font-bold uppercase tracking-wider text-slate-800 dark:text-brandMuted border-b border-slate-100 dark:border-brandHover/50 mb-1 truncate">
+                {{ attrs.label }}
+            </div>
+            <div class="space-y-1 px-1">
+                {{ slot }}
+            </div>
+        </div>
+    </button>
+
+    <!-- Contenedor de submódulos cuando está expandido -->
+    <div x-show="open && !collapsed" x-transition class="pl-8 pr-2 py-1 space-y-1">
+        {{ slot }}
+    </div>
     {% endif %}
 </div>

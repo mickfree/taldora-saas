@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}taldora{% endblock %}</title>
+    <title>{% block title %}Taldora{% endblock %}</title>
 
     <!-- Tailwind Play CDN (Permite usar Tailwind CSS al instante sin Node.js en desarrollo) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,9 +16,9 @@
     <script defer src="{% static 'js/sidebar.js' %}"></script>
 
     <!-- HTMX (Carga asíncrona súper ligera y dinámica) -->
-    <script src="https://unpkg.com/htmx.org@1.9.12"
-        integrity="sha384-ujb1lZYygJmzgSWoEeKBspU0e/Gm5KSkAHFq9lKGzb15S8Gg1y9ToT1O8WYWZ579"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
+            integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+            crossorigin="anonymous"></script>
 
     <!-- Alpine.js (Para interactividad y animaciones del cliente, modales, etc. Debe tener 'defer') -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -51,7 +51,7 @@
             class="border-b border-slate-200 dark:border-brandHover bg-white/80 dark:bg-brandBg/80 backdrop-blur z-40 transition-colors duration-200">
             <div class="max-w-full mx-auto px-6 h-12 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <span class="text-sm font-semibold text-slate-800 dark:text-white">{% block page_title %}Dashboard{% endblock %}</span>
+                    <span class="text-sm font-semibold text-slate-800 dark:text-white">{% block page_title %}{% endblock %}</span>
                 </div>
 
                 <nav class="hidden md:flex items-center gap-2">
@@ -76,6 +76,8 @@
             </main>
         </div>
     </div>
+
+    <c-ui.toast />
 
     {% block extra_js %}{% endblock %}
 </body>

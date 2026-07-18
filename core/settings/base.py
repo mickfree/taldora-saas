@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # django-allauth middleware
+    'core.middleware.HtmxMessageMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'

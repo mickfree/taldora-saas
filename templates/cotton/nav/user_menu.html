@@ -24,6 +24,10 @@
                 <c-ui.icon name="shield-lock" class="text-sm" />
                 Admin Panel
             </a>
+            <a href="{% url 'settings_profile' %}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-50 dark:hover:bg-brandHover/50 rounded-lg transition-colors">
+                <c-ui.icon name="user" class="text-sm" />
+                Perfil
+            </a>
             <div class="border-t border-slate-100 dark:border-brandHover my-1"></div>
             <form action="{% url 'account_logout' %}" method="post" class="block w-full">
                 {% csrf_token %}
