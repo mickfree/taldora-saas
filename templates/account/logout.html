@@ -1,0 +1,33 @@
+{% extends 'account/base.html' %}
+
+{% block title %}Cerrar Sesión | Taldora{% endblock %}
+
+{% block content %}
+<div class="text-center mb-6">
+    <div class="w-12 h-12 bg-rose-500/10 rounded-xl flex items-center justify-center text-rose-500 mx-auto mb-3 ring-4 ring-rose-50/5">
+        <i class="ti ti-logout text-2xl"></i>
+    </div>
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Cerrar Sesión</h2>
+    <p class="text-xs text-slate-500 dark:text-brandMuted/70 mt-2">
+        ¿Estás seguro de que deseas cerrar sesión en tu cuenta?
+    </p>
+</div>
+
+<form method="POST" action="{% url 'account_logout' %}" class="space-y-4">
+    {% csrf_token %}
+    
+    {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+
+    <div class="pt-2 flex flex-col gap-2">
+        <c-ui.button type="submit" class="w-full btn-delete flex justify-center py-2.5">
+            Cerrar Sesión
+        </c-ui.button>
+        
+        <c-ui.button href="/" class="w-full btn-ghost flex justify-center py-2.5">
+            Cancelar
+        </c-ui.button>
+    </div>
+</form>
+{% endblock %}

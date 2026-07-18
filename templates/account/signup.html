@@ -1,0 +1,85 @@
+{% extends 'account/base.html' %}
+
+{% block title %}Registrarse | Taldora{% endblock %}
+
+{% block content %}
+<div class="text-center mb-6">
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Crea tu cuenta</h2>
+    <p class="text-xs text-slate-500 dark:text-brandMuted/70">Regístrate para comenzar a usar Taldora</p>
+</div>
+
+{% if form.non_field_errors %}
+    <div class="mb-4 p-3 text-xs bg-rose-50 text-rose-800 border border-rose-200 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-800/40 rounded-xl">
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<form class="space-y-4" method="POST" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    
+    {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+
+    {% if form.username %}
+        <c-ui.input 
+            type="text" 
+            name="username" 
+            id="id_username" 
+            label="Nombre de usuario" 
+            placeholder="Tu nombre de usuario"
+            required="true"
+            autocomplete="username"
+            :errors="form.username.errors"
+            value="{{ form.username.value|default:'' }}" />
+    {% endif %}
+
+    {% if form.email %}
+        <c-ui.input 
+            type="email" 
+            name="email" 
+            id="id_email" 
+            label="Correo electrónico" 
+            placeholder="nombre@ejemplo.com"
+            required="{% if ACCOUNT_EMAIL_REQUIRED %}true{% else %}false{% endif %}"
+            autocomplete="email"
+            :errors="form.email.errors"
+            value="{{ form.email.value|default:'' }}" />
+    {% endif %}
+
+    <c-ui.input 
+        type="password" 
+        name="password1" 
+        id="id_password1" 
+        label="Contraseña" 
+        placeholder="••••••••"
+        required="true"
+        autocomplete="new-password"
+        :errors="form.password1.errors" />
+
+    <c-ui.input 
+        type="password" 
+        name="password2" 
+        id="id_password2" 
+        label="Confirmar contraseña" 
+        placeholder="••••••••"
+        required="true"
+        autocomplete="new-password"
+        :errors="form.password2.errors" />
+
+    <div class="pt-2">
+        <c-ui.button type="submit" class="w-full btn-default flex justify-center py-2.5">
+            Crear Cuenta
+        </c-ui.button>
+    </div>
+</form>
+
+<div class="mt-6 text-center text-xs text-slate-500 dark:text-brandMuted/60">
+    ¿Ya tienes una cuenta? 
+    <a href="{% url 'account_login' %}" class="font-semibold text-primary-600 hover:text-primary-500 dark:text-brandAccent dark:hover:text-brandAccent/80">
+        Inicia sesión aquí
+    </a>
+</div>
+{% endblock %}

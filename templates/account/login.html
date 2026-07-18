@@ -1,0 +1,75 @@
+{% extends 'account/base.html' %}
+
+{% block title %}Iniciar Sesión | Taldora{% endblock %}
+
+{% block content %}
+<div class="text-center mb-6">
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Bienvenido de nuevo</h2>
+    <p class="text-xs text-slate-500 dark:text-brandMuted/70">Ingresa tus credenciales para acceder a tu cuenta</p>
+</div>
+
+{% if form.non_field_errors %}
+    <div class="mb-4 p-3 text-xs bg-rose-50 text-rose-800 border border-rose-200 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-800/40 rounded-xl">
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<form class="space-y-4" method="POST" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    
+    {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+
+    <c-ui.input 
+        type="text" 
+        name="login" 
+        id="id_login" 
+        label="Usuario" 
+        placeholder="Nombre de usuario"
+        required="true"
+        autocomplete="username"
+        :errors="form.login.errors"
+        value="{{ form.login.value|default:'' }}" />
+
+    <c-ui.input 
+        type="password" 
+        name="password" 
+        id="id_password" 
+        label="Contraseña" 
+        placeholder="••••••••"
+        required="true"
+        autocomplete="current-password"
+        :errors="form.password.errors" />
+
+    <div class="flex items-center justify-between mt-2">
+        <div class="flex items-center">
+            <input id="id_remember" name="remember" type="checkbox" 
+                   class="h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 dark:border-brandHover dark:bg-brandBg dark:focus:ring-offset-brandBg transition-colors cursor-pointer">
+            <label for="id_remember" class="ml-2 block text-xs text-slate-700 dark:text-brandMuted cursor-pointer select-none">
+                Recordarme
+            </label>
+        </div>
+        <div class="text-xs">
+            <a href="{% url 'account_reset_password' %}" class="font-semibold text-primary-600 hover:text-primary-500 dark:text-brandAccent dark:hover:text-brandAccent/80">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </div>
+    </div>
+
+    <div class="pt-2">
+        <c-ui.button type="submit" class="w-full btn-default flex justify-center py-2.5">
+            Iniciar Sesión
+        </c-ui.button>
+    </div>
+</form>
+
+<div class="mt-6 text-center text-xs text-slate-500 dark:text-brandMuted/60">
+    ¿No tienes una cuenta? 
+    <a href="{% url 'account_signup' %}" class="font-semibold text-primary-600 hover:text-primary-500 dark:text-brandAccent dark:hover:text-brandAccent/80">
+        Regístrate aquí
+    </a>
+</div>
+{% endblock %}

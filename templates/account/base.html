@@ -1,0 +1,56 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Taldora - Autenticación{% endblock %}</title>
+
+    {% tailwind_css %}
+
+    <!-- theme mode and config -->
+    <script src="{% static 'js/theme.js' %}"></script>
+
+    <!-- HTMX (Carga asíncrona) -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
+            integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+            crossorigin="anonymous"></script>
+
+    <!-- Alpine.js (Interactividad) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Tabler Icons (Iconos) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-brandBg text-slate-600 dark:text-brandMuted font-sans antialiased transition-colors duration-200 relative overflow-hidden"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+    <!-- Theme toggle fixed at the top right -->
+    <div class="absolute top-4 right-4 z-50">
+        <c-ui.theme-toggle />
+    </div>
+
+    <!-- Auth Card Container -->
+    <div class="w-full max-w-md p-8 bg-white dark:bg-brandHover/30 border border-slate-200/80 dark:border-brandHover/50 rounded-2xl shadow-xl backdrop-blur-sm z-10 transition-colors duration-200">
+
+        <!-- Dynamic Content -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <c-ui.toast />
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

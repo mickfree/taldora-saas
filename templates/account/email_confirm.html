@@ -1,0 +1,34 @@
+{% extends 'account/base.html' %}
+
+{% block title %}Confirmar Correo | Taldora{% endblock %}
+
+{% block content %}
+<div class="text-center mb-6">
+    <div class="w-12 h-12 bg-primary-600/10 dark:bg-primary-400/10 rounded-xl flex items-center justify-center text-primary-600 dark:text-primary-400 mx-auto mb-3 ring-4 ring-primary-50 dark:ring-brandHover/20">
+        <i class="ti ti-mail text-2xl"></i>
+    </div>
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Confirmar Correo</h2>
+</div>
+
+{% if confirmation %}
+    <p class="text-xs text-slate-500 dark:text-brandMuted/70 text-center mb-6 leading-relaxed">
+        Por favor, confirma que deseas asociar la dirección de correo electrónico <strong class="text-slate-800 dark:text-white font-semibold">{{ confirmation.email_address.email }}</strong> a tu cuenta.
+    </p>
+
+    <form method="POST" action="{% url 'account_confirm_email' confirmation.key %}" class="space-y-4">
+        {% csrf_token %}
+        <c-ui.button type="submit" class="w-full btn-default flex justify-center py-2.5">
+            Confirmar Dirección de Correo
+        </c-ui.button>
+    </form>
+{% else %}
+    <p class="text-xs text-rose-500 dark:text-rose-400 text-center mb-6 leading-relaxed">
+        Este enlace de confirmación de correo electrónico no es válido o ha expirado.
+    </p>
+    <div class="pt-2">
+        <c-ui.button href="{% url 'account_login' %}" class="w-full btn-default flex justify-center py-2.5">
+            Volver a Iniciar Sesión
+        </c-ui.button>
+    </div>
+{% endif %}
+{% endblock %}
