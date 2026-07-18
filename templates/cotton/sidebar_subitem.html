@@ -1,0 +1,8 @@
+<!-- templates/cotton/sidebar_subitem.html -->
+<a href="{{ attrs.href }}"
+   data-sub-label="{{ attrs.label }}"
+   x-show="shouldShowSubitem('{{ attrs.label|escapejs }}')"
+   class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all group min-w-0 {% if attrs.active or request.path == attrs.href %}text-primary-600 bg-slate-50 dark:text-brandAccent dark:bg-brandHover/50{% else %}text-slate-500 hover:text-primary-600 hover:bg-slate-50 dark:text-brandMuted dark:hover:text-brandAccent dark:hover:bg-brandHover/30{% endif %}">
+    <i class="ti ti-{{ attrs.icon }} {{ attrs.class }} flex-shrink-0"></i>
+    <span class="truncate block text-left flex-1">{{ attrs.label }}</span>
+</a>

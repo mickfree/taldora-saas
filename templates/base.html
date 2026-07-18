@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}taldora{% endblock %}</title>
+
+    <!-- Tailwind Play CDN (Permite usar Tailwind CSS al instante sin Node.js en desarrollo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- theme mode and config -->
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/tailwind-config.js' %}"></script>
+    <script defer src="{% static 'js/sidebar.js' %}"></script>
+
+    <!-- HTMX (Carga asíncrona súper ligera y dinámica) -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+        integrity="sha384-ujb1lZYygJmzgSWoEeKBspU0e/Gm5KSkAHFq9lKGzb15S8Gg1y9ToT1O8WYWZ579"
+        crossorigin="anonymous"></script>
+
+    <!-- Alpine.js (Para interactividad y animaciones del cliente, modales, etc. Debe tener 'defer') -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Tabler Icons (Biblioteca de iconos moderna) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <style>
+        /* Estilos personalizados y utilidades de transición */
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<!-- hx-headers inyecta automáticamente el token CSRF de Django en todas las peticiones asíncronas de HTMX -->
+
+<body
+    class="h-screen flex overflow-hidden font-sans antialiased bg-slate-50 text-slate-600 dark:bg-brandBg dark:text-brandMuted selection:bg-brandAccent selection:text-white transition-colors duration-200"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+    <!-- Componente de Barra Lateral (Sidebar) -->
+    <c-sidebar />
+
+    <!-- Panel de Contenido Principal (Derecha) -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <!-- Header / Top Bar -->
+        <header
+            class="border-b border-slate-200 dark:border-brandHover bg-white/80 dark:bg-brandBg/80 backdrop-blur z-40 transition-colors duration-200">
+            <div class="max-w-full mx-auto px-6 h-12 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-semibold text-slate-800 dark:text-white">{% block page_title %}Dashboard{% endblock %}</span>
+                </div>
+
+                <nav class="hidden md:flex items-center gap-2">
+
+                    <!-- Componente de Tema -->
+                    <c-theme-toggle />
+                    <span class="text-xs text-slate-200 dark:text-brandHover">|</span>
+                    <c-user-menu />
+
+                </nav>
+
+                <!-- Menú Móvil en Alpine.js -->
+                <c-mobile-menu />
+            </div>
+        </header>
+
+        <!-- Panel de Contenido Desplazable -->
+        <div class="flex-1 overflow-y-auto flex flex-col justify-between">
+            <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

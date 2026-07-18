@@ -1,0 +1,15 @@
+asgiref==3.12.1
+Django==6.0.7
+django-allauth==65.18.0
+django-browser-reload==1.21.0
+django-cotton==2.7.2
+django-debug-toolbar==7.0.0
+django-environ==0.14.0
+django-extensions==4.1
+django-unfold==0.101.0
+psycopg==3.3.4
+psycopg-binary==3.3.4
+sqlparse==0.5.5
+typing_extensions==4.16.0
+tzdata==2026.3
+whitenoise==6.12.0

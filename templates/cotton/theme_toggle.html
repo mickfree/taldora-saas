@@ -1,0 +1,30 @@
+<!-- templates/cotton/theme_toggle.html -->
+<div x-data="{ 
+         darkMode: document.documentElement.classList.contains('dark'),
+         toggleTheme() {
+             this.darkMode = !this.darkMode;
+             if (this.darkMode) {
+                 document.documentElement.classList.add('dark');
+                 localStorage.setItem('theme', 'dark');
+             } else {
+                 document.documentElement.classList.remove('dark');
+                 localStorage.setItem('theme', 'light');
+             }
+         }
+     }"
+     class="flex items-center">
+    <button @click="toggleTheme" 
+            class="h-7 w-7 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-brandHover dark:hover:bg-brandBg border border-slate-300 dark:border-brandHover text-slate-700 dark:text-brandMuted hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+            :title="darkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+        
+        <!-- Icono de Sol: visible solo si darkMode es verdadero -->
+        <span x-show="darkMode">
+            <c-icon name="sun-high" class="text-base" />
+        </span>
+
+        <!-- Icono de Luna: visible solo si darkMode es falso -->
+        <span x-show="!darkMode">
+            <c-icon name="moon-stars" class="text-base" />
+        </span>
+    </button>
+</div>

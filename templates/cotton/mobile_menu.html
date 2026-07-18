@@ -1,0 +1,35 @@
+<!-- Menú Móvil en Alpine.js -->
+<div class="md:hidden" x-data="{ open: false }">
+    <button @click="open = !open" class="text-slate-500 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent p-2">
+        <span x-show="!open">
+            <c-icon name="menu-2" class="text-lg" />
+        </span>
+        <span x-show="open">
+            <c-icon name="x" class="text-lg" />
+        </span>
+    </button>
+    <div x-show="open" @click.away="open = false" 
+         x-transition:enter="transition ease-out duration-100" 
+         x-transition:enter-start="transform opacity-0 scale-95" 
+         x-transition:enter-end="transform opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="transform opacity-100 scale-100"
+         x-transition:leave-end="transform opacity-0 scale-95"
+         class="absolute top-10 right-4 w-48 rounded-lg bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover p-2 shadow-xl z-50" x-cloak>
+        <a href="/" class="block px-4 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent rounded-md">Inicio</a>
+        {% if user.is_authenticated %}
+            <a href="/admin/" class="block px-4 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent rounded-md">Admin Panel</a>
+            <form action="{% url 'account_logout' %}" method="post" class="block w-full">
+                {% csrf_token %}
+                <button type="submit" class="block w-full text-left px-4 py-2 text-xs text-rose-500 hover:bg-slate-100 dark:hover:bg-brandHover rounded-md">Cerrar Sesión</button>
+            </form>
+        {% else %}
+            <a href="{% url 'account_login' %}" class="block px-4 py-2 text-xs text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent rounded-md">Iniciar Sesión</a>
+            <a href="{% url 'account_signup' %}" class="block px-4 py-2 text-xs text-primary-600 dark:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover rounded-md font-semibold">Registrarse</a>
+        {% endif %}
+        <div class="flex items-center justify-between px-4 py-2 border-t border-slate-200 dark:border-brandHover mt-2 pt-2">
+            <span class="text-xs text-slate-400 dark:text-brandMuted">Modo</span>
+            <c-theme-toggle />
+        </div>
+    </div>
+</div>

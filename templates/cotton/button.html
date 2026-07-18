@@ -1,0 +1,8 @@
+<!-- templates/cotton/button.html -->
+<button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all active:scale-95 duration-150 {{ attrs.class|default:'text-white bg-primary-600 hover:bg-primary-500 shadow-primary-600/10' }}"
+        {% if attrs.onclick %} @click="{{ attrs.onclick }}" {% endif %}
+        {% if attrs.hx_get %} hx-get="{{ attrs.hx_get }}" {% endif %}
+        {% if attrs.hx_target %} hx-target="{{ attrs.hx_target }}" {% endif %}
+        {% if attrs.hx_swap %} hx-swap="{{ attrs.hx_swap }}" {% endif %}>
+    {{ slot }}
+</button>
