@@ -116,13 +116,17 @@ AUTH_USER_MODEL = 'users.CustomUser'
 SITE_ID = 1
 
 # django-allauth Configuration
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Adjust for production if needed
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
+LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+DEFAULT_FROM_EMAIL = 'Taldora <noreply@taldora.com>'
 
 # Internationalization
 LANGUAGE_CODE = 'es'

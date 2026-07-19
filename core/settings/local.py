@@ -21,5 +21,11 @@ INTERNAL_IPS = [
     '::1',
 ]
 
-# Console email backend for testing signups in development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email Configuration for testing
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = env("EMAIL_HOST_USER_DEV")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD_DEV")
+DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER_DEV")

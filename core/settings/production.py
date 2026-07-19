@@ -22,11 +22,11 @@ STORAGES = {
     },
 }
 
-# Production email backend (configure via SMTP env vars)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST', default='')
-EMAIL_PORT = env.int('EMAIL_PORT', default=587)
-EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
-EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='webmaster@localhost')
+# Production email backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = env('EMAIL_HOST_SES')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER_SES')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD_SES')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL_SES')
