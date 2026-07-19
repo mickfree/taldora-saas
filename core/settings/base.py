@@ -82,12 +82,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-ASGI_APPLICATION = 'core.wsgi.application' # Fallback, update in asgi.py if needed
+ASGI_APPLICATION = 'core.wsgi.application' 
 
-# Database configuration (overridden in local/production)
-DATABASES = {
-    'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
-}
+
+# Database configuration
+if DEBUG:
+    DATABASES = {
+        'default': env.db(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+    }
+else:
+    DATABASES = {
+        'default': env.db('DATABASE_URL')
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
