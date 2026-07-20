@@ -60,7 +60,7 @@ def submit_payment_proof(request):
 
 @login_required
 def history_payment_list(request):
-    initial_qs = PaymentProof.objects.filter(user=request.user).order_by('-created_at')
+    initial_qs = PaymentProof.objects.filter(user=request.user).select_related('plan').order_by('-created_at')
     payment_proof_filter = PaymentProofFilter(request.GET, queryset=initial_qs)
     payment_proofs = payment_proof_filter.qs
 

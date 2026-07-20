@@ -21,6 +21,12 @@ INTERNAL_IPS = [
     '::1',
 ]
 
+# Force toolbar display in local development (useful when accessing via Docker, localhost or different IP)
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
+
+
 # Email Configuration for testing
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True

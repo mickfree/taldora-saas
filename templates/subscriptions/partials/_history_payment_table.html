@@ -25,9 +25,19 @@
             <c-table.td class="font-semibold">PEN {{ proof.amount }}</c-table.td>
             <c-table.td>
                 {% if proof.proof_file %}
-                <a href="{{ proof.proof_file.url }}" target="_blank">
-                    <c-ui.icon name="eye" class="text-slate-400 hover:text-brandAccent" />
-                </a>
+                <c-ui.modal size="xl">
+                    <c-slot name="trigger">
+                        <button type="button" 
+                                title="Ver comprobante"
+                                class="p-1.5 rounded-lg text-slate-400 hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50 transition-colors">
+                            <c-ui.icon name="eye" class="text-base" />
+                        </button>
+                    </c-slot>
+
+                    <div class="flex items-center justify-center p-2 bg-slate-950/5 dark:bg-black/40 rounded-xl overflow-auto">
+                        <img src="{{ proof.proof_file.url }}" alt="Comprobante de Pago" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md" />
+                    </div>
+                </c-ui.modal>
                 {% endif %}
             </c-table.td>
         </tr>

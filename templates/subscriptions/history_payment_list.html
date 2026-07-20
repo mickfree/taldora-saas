@@ -3,12 +3,14 @@
 
 {% block breadcrumbs %}
 <c-ui.breadcrumbs>
-    {% block page_title %}-{% endblock %}
+    <c-ui.breadcrumbs_item href="{% url 'home' %}" icon="home" label="Inicio" />
+    <c-ui.breadcrumbs_item icon="shopping-cart" label="Subscripciones" />
+    <c-ui.breadcrumbs_item icon="receipt" label="Historial de Pagos" active="true" />
 </c-ui.breadcrumbs>
 {% endblock %}
 
 {% block content %}
-<div id="history-payment">
+<div id="history-payment"> 
     <!-- Header -->
     <c-ui.header title="Historial de Pagos"
         description="Aquí puedes encontrar un registro de todos los pagos que has realizado.">
@@ -46,6 +48,7 @@
                 empty_label="Todos los ciclos"
                 wrapper_class="col-span-1 md:col-span-1"
             />
+            
         </c-table.filter_bar>
         <c-table.overlay title="Historial">
             <div id="history-payment-table">
