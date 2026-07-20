@@ -1,22 +1,45 @@
 <!-- templates/cotton/ui/breadcrumbs_item.html -->
-<li class="inline-flex items-center gap-1 md:gap-1.5 [&:first-child>.separator]:hidden">
+<li class="relative inline-flex items-center gap-1 md:gap-1.5 [&:first-child>.separator]:hidden" {% if menu %}x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" @click.away="open = false"{% endif %}>
     <span class="separator text-slate-400 dark:text-brandMuted/40 flex items-center justify-center select-none" aria-hidden="true">
         <c-ui.icon name="chevron-right" class="text-[10px]" />
     </span>
 
-    {% if attrs.href and not attrs.active %}
-        <a href="{{ attrs.href }}" class="inline-flex items-center gap-1 hover:text-slate-800 dark:hover:text-white transition-colors duration-150">
-            {% if attrs.icon %}
-                <c-ui.icon name="{{ attrs.icon }}" class="text-sm" />
-            {% endif %}
-            <span>{{ attrs.label|default:slot }}</span>
-        </a>
-    {% else %}
-        <span class="inline-flex items-center gap-1 {% if attrs.active %}text-slate-800 dark:text-white font-semibold{% else %}text-slate-400 dark:text-brandMuted/60{% endif %}">
-            {% if attrs.icon %}
-                <c-ui.icon name="{{ attrs.icon }}" class="text-sm" />
-            {% endif %}
-            <span>{{ attrs.label|default:slot }}</span>
-        </span>
-    {% endif %}
+    <div class="inline-flex items-center gap-1">
+        {% if attrs.href and not attrs.active %}
+            <a href="{{ attrs.href }}" class="inline-flex items-center gap-1 hover:text-slate-800 dark:hover:text-white transition-colors duration-150">
+                {% if attrs.icon %}
+                    <c-ui.icon name="{{ attrs.icon }}" class="text-sm" />
+                {% endif %}
+                <span>{{ attrs.label|default:slot }}</span>
+            </a>
+        {% else %}
+            <span class="inline-flex items-center gap-1 {% if attrs.active %}text-slate-800 dark:text-white font-semibold{% else %}text-slate-400 dark:text-brandMuted/60{% endif %}">
+                {% if attrs.icon %}
+                    <c-ui.icon name="{{ attrs.icon }}" class="text-sm" />
+                {% endif %}
+                <span>{{ attrs.label|default:slot }}</span>
+            </span>
+        {% endif %}
+
+        {% if menu %}
+            <button type="button" 
+                    @click="open = !open" 
+                    class="p-0.5 rounded hover:bg-slate-200/60 dark:hover:bg-brandHover text-slate-400 dark:text-brandMuted hover:text-slate-700 dark:hover:text-white transition-colors focus:outline-none"
+                    aria-label="Opciones de navegación">
+                <c-ui.icon name="chevron-down" class="text-[10px] transition-transform duration-200" :class="{ 'rotate-180': open }" />
+            </button>
+
+            <div x-show="open"
+                 x-transition:enter="transition ease-out duration-100"
+                 x-transition:enter-start="transform opacity-0 scale-95"
+                 x-transition:enter-end="transform opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-75"
+                 x-transition:leave-start="transform opacity-100 scale-100"
+                 x-transition:leave-end="transform opacity-0 scale-95"
+                 class="absolute left-0 top-full mt-1.5 w-max min-w-[210px] whitespace-nowrap rounded-xl bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover p-1.5 shadow-lg z-50 space-y-0.5"
+                 x-cloak>
+                {{ menu }}
+            </div>
+        {% endif %}
+    </div>
 </li>
