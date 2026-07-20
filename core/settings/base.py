@@ -124,6 +124,10 @@ AUTH_USER_MODEL = 'users.CustomUser'
 SITE_ID = 1
 
 # django-allauth Configuration
+
+# custom adapter for send email with celery
+ACCOUNT_ADAPTER = 'apps.users.adapters.CeleryAccountAdapter'
+
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True
