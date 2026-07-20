@@ -66,7 +66,7 @@ def history_payment_list(request):
 
     # pagination
     page_number = request.GET.get('page')
-    paginator = Paginator(payment_proofs, 13)
+    paginator = Paginator(payment_proofs, 25)
     page_obj = paginator.get_page(page_number)
     
     context = {

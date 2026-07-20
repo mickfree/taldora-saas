@@ -2,22 +2,7 @@
 {% load static %}
 
 {% block breadcrumbs %}
-<c-ui.breadcrumbs>
-    <c-ui.breadcrumbs_item href="{% url 'home' %}" icon="home" label="Inicio" />
-    <c-ui.breadcrumbs_item href="{% url 'plan_list' %}" icon="shopping-cart" label="Subscripciones">
-        <c-slot name="menu">
-            <a href="{% url 'plan_list' %}" class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-brandHover font-semibold text-slate-900 dark:text-white transition-colors whitespace-nowrap">
-                <c-ui.icon name="shopping-cart" class="text-sm text-primary-600 dark:text-brandAccent" />
-                <span>Planes y Suscripciones</span>
-            </a>
-            <a href="{% url 'history_payment_list' %}" class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50 transition-colors whitespace-nowrap">
-                <c-ui.icon name="receipt" class="text-sm" />
-                <span>Historial de Pagos</span>
-            </a>
-        </c-slot>
-    </c-ui.breadcrumbs_item>
-    <c-ui.breadcrumbs_item icon="sparkles" label="Planes y Suscripciones" active="true" />
-</c-ui.breadcrumbs>
+{% include 'subscriptions/partials/_breadcrumbs.html' %}
 {% endblock %}
 
 {% block content %}
