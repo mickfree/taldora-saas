@@ -1,3 +1,5 @@
+import os
+import sys
 import environ
 from pathlib import Path
 
@@ -47,8 +49,8 @@ INSTALLED_APPS = [
 
 # Tailwind CSS Configuration
 TAILWIND_APP_NAME = "theme"
+NPM_BIN_PATH = env('NPM_BIN_PATH', default='npm' if sys.platform != 'win32' else r"C:\Program Files\nodejs\npm.cmd")
 
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
