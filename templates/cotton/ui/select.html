@@ -1,0 +1,41 @@
+<!-- templates/cotton/ui/select.html -->
+<c-vars field="" options="" value="" class="" wrapper_class="" empty_label="" />
+
+{% with opt_list=options|default:field.field.choices opt_val=value|default:field.value select_name=attrs.name|default:field.html_name select_label=attrs.label|default:field.label %}
+<div class="space-y-1.5 {{ wrapper_class }}">
+    {% if select_label %}
+        <label for="{{ attrs.id|default:select_name }}" class="block text-xs font-semibold text-slate-700 dark:text-brandMuted">
+            {{ select_label }}
+            {% if attrs.required %}<span class="text-rose-500">*</span>{% endif %}
+        </label>
+    {% endif %}
+    
+    <select 
+        name="{{ select_name }}" 
+        id="{{ attrs.id|default:select_name }}" 
+        {% if attrs.required %}required{% endif %}
+        {% if attrs.disabled %}disabled{% endif %}
+        class="w-full px-3 py-2 text-xs rounded-lg border bg-white dark:bg-brandBg text-slate-800 dark:text-white border-slate-200 dark:border-brandHover focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed {{ class }} {{ attrs.class }}">
+        
+        {% if empty_label %}
+            <option value="" {% if not opt_val %}selected{% endif %}>{{ empty_label }}</option>
+        {% endif %}
+
+        {% if opt_list %}
+            {% for item_val, item_label in opt_list %}
+                {% if not empty_label or item_val|stringformat:"s" != "" %}
+                    <option value="{{ item_val }}" {% if opt_val|stringformat:"s" == item_val|stringformat:"s" %}selected{% endif %}>
+                        {{ item_label }}
+                    </option>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {{ slot }}
+        {% endif %}
+    </select>
+
+    {% if attrs.help_text %}
+        <p class="text-[10px] text-slate-400 dark:text-brandMuted/60 leading-relaxed">{{ attrs.help_text }}</p>
+    {% endif %}
+</div>
+{% endwith %}

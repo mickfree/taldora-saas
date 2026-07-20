@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<c-ui.breadcrumbs>
+    {% block page_title %}-{% endblock %}
+</c-ui.breadcrumbs>
+{% endblock %}
+
+{% block content %}
+<div id="history-payment">
+    <!-- Header -->
+    <c-ui.header title="Historial de Pagos"
+        description="Aquí puedes encontrar un registro de todos los pagos que has realizado.">
+        <c-slot name="icon">
+            <c-ui.icon name="receipt" class="text-sm" />
+        </c-slot>
+    </c-ui.header>
+
+    <!-- Historial de Comprobantes de Pago -->
+    <div>
+        <c-table.header title="Historial">
+            <c-ui.button_hx type="button" hx_get="#" hx_target="#container-profile" hx_select="#profile-form"
+                hx_swap="innerHTML" class="btn-confirm">
+                <c-ui.icon name="download" class="text-sm" />
+                Exportar
+            </c-ui.button_hx>
+        </c-table.header>
+
+        <c-table.filter_bar url="{% url 'history_payment_list' %}" target="#history-payment-table"
+            form_id="history-payment-filter-form">
+            <c-ui.input_filter
+                name="search"
+                placeholder="Buscar..." 
+                label="Buscar"
+                :value="request.GET.search" 
+                wrapper_class="col-span-1 md:col-span-2" 
+            />
+            <c-ui.select
+                :field="payment_proof_filter.form.status"
+                empty_label="Todos los estados"
+                wrapper_class="col-span-1 md:col-span-1"
+            />
+            <c-ui.select
+                :field="payment_proof_filter.form.billing_cycle"
+                empty_label="Todos los ciclos"
+                wrapper_class="col-span-1 md:col-span-1"
+            />
+        </c-table.filter_bar>
+        <c-table.overlay title="Historial">
+            <div id="history-payment-table">
+                {% include 'subscriptions/partials/_history_payment_table.html' %}
+            </div>
+        </c-table.overlay>
+    </div>
+
+</div>
+{% endblock %}

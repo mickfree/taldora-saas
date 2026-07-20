@@ -1,0 +1,31 @@
+<c-vars url="" target="" indicator="" form_id="filter-form" />
+
+<div x-data="" class="shrink-0 p-3 flex flex-col justify-center bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover">
+
+    <form id="{{ form_id }}"
+          class="w-full flex flex-col xl:flex-row gap-4 xl:gap-6 items-end justify-between"
+          hx-get="{{ url }}"
+          hx-target="{{ target }}"
+          hx-swap="innerHTML"
+          {% if indicator %}hx-indicator="{{ indicator }}"{% endif %}
+          hx-trigger="input delay:500ms from:input[type='text'], input delay:500ms from:input[type='search'], input delay:500ms from:input[type='number'], change from:input[type='date'], change from:input[type='checkbox'], change from:select, select2:change">
+
+        <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 items-end">
+            {{ slot }}
+
+            <div class="col-span-1 flex justify-start">
+                <a href="{{ url }}" title="Limpiar Filtros"
+                    class="h-[35px] w-[35px] inline-flex items-center justify-center bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover rounded-lg text-slate-500 dark:text-brandMuted hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 hover:border-blue-300 transition-all duration-150 shadow-sm focus:outline-none">
+                    <c-ui.icon name="refresh" class="text-sm" />
+                </a>
+            </div>
+        </div>
+
+        {% if actions or slots.actions %}
+            <div class="shrink-0 flex items-end gap-2 pb-[1px] xl:ml-auto">
+                {% if actions %}{{ actions }}{% else %}{{ slots.actions }}{% endif %}
+            </div>
+        {% endif %}
+
+    </form>
+</div>

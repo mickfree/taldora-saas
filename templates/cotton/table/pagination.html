@@ -1,0 +1,80 @@
+<c-vars page="" target_id="" form_id="#filter-form" />
+
+{% with dps=page %}
+{% if dps and dps.paginator.num_pages > 1 %}
+<div class="grid grid-cols-1 sm:grid-cols-3 items-center w-full bg-white dark:bg-brandBg border-x border-b border-slate-200 dark:border-brandHover rounded-b-2xl px-4 py-2 shadow-sm gap-2">
+
+    <div class="hidden sm:flex items-center gap-1 text-[10px] font-black text-zinc-500 dark:text-zinc-400 justify-start">
+        <span class="font-mono text-zinc-900 dark:text-zinc-100 bg-zinc-200/80 dark:bg-zinc-800 px-1 py-0.5 rounded-sm">{{ dps.start_index }}</span>
+        <span>-</span>
+        <span class="font-mono text-zinc-900 dark:text-zinc-100 bg-zinc-200/80 dark:bg-zinc-800 px-1 py-0.5 rounded-sm">{{ dps.end_index }}</span>
+        de
+        <span class="font-mono text-zinc-900 dark:text-zinc-100 bg-zinc-200/80 dark:bg-zinc-800 px-1 py-0.5 rounded-sm">{{ dps.paginator.count }}</span>
+    </div>
+
+    <nav class="flex items-center justify-center gap-1" aria-label="Paginación">
+        {% if dps.has_previous %}
+            <button type="button"
+                    hx-get="{{ request.path }}?page={{ dps.previous_page_number }}"
+                    {% if target_id %}hx-target="{{ target_id }}"{% endif %}
+                    hx-swap="innerHTML"
+                    hx-include="{{ form_id }}"
+                    class="h-7 w-7 flex items-center justify-center border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-500 hover:text-zinc-900 hover:border-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors focus:outline-none rounded-sm">
+                <i class="ti ti-chevrons-left"></i>
+            </button>
+        {% else %}
+            <div class="h-7 w-7 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-300 dark:text-zinc-700 cursor-not-allowed rounded-sm">
+                <i class="ti ti-chevrons-left"></i>
+            </div>
+        {% endif %}
+
+        {% for i in dps.paginator.page_range %}
+            {% if i == dps.number %}
+                <div class="h-7 w-7 flex items-center justify-center border border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-mono text-xs font-bold rounded-sm">
+                    {{ i }}
+                </div>
+            {% elif i > dps.number|add:'-3' and i < dps.number|add:'3' %}
+                <button type="button"
+                        hx-get="{{ request.path }}?page={{ i }}"
+                        {% if target_id %}hx-target="{{ target_id }}"{% endif %}
+                        hx-swap="innerHTML"
+                        hx-include="{{ form_id }}"
+                        class="h-7 w-7 flex items-center justify-center border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-mono text-xs hover:text-zinc-900 hover:border-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors focus:outline-none rounded-sm">
+                    {{ i }}
+                </button>
+            {% elif i == 1 or i == dps.paginator.num_pages %}
+                <button type="button"
+                        hx-get="{{ request.path }}?page={{ i }}"
+                        {% if target_id %}hx-target="{{ target_id }}"{% endif %}
+                        hx-swap="innerHTML"
+                        hx-include="{{ form_id }}"
+                        class="h-7 w-7 flex items-center justify-center border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-mono text-xs hover:text-zinc-900 hover:border-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors focus:outline-none rounded-sm">
+                    {{ i }}
+                </button>
+            {% elif i == dps.number|add:'-3' or i == dps.number|add:'3' %}
+                <div class="h-7 w-7 flex items-center justify-center text-zinc-400 font-mono text-xs">
+                    ...
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if dps.has_next %}
+            <button type="button"
+                    hx-get="{{ request.path }}?page={{ dps.next_page_number }}"
+                    {% if target_id %}hx-target="{{ target_id }}"{% endif %}
+                    hx-swap="innerHTML"
+                    hx-include="{{ form_id }}"
+                    class="h-7 w-7 flex items-center justify-center border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-500 hover:text-zinc-900 hover:border-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors focus:outline-none rounded-sm">
+                <i class="ti ti-chevrons-right"></i>
+            </button>
+        {% else %}
+            <div class="h-7 w-7 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-300 dark:text-zinc-700 cursor-not-allowed rounded-sm">
+                <i class="ti ti-chevrons-right"></i>
+            </div>
+        {% endif %}
+    </nav>
+
+    <div class="hidden sm:block"></div>
+</div>
+{% endif %}
+{% endwith %}

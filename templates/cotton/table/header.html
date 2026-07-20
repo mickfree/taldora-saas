@@ -1,0 +1,15 @@
+<div class="flex-none px-3 py-1 md:px-4 flex justify-between items-center w-full gap-2 bg-white dark:bg-brandBg border-t border-x border-slate-200 dark:border-brandHover rounded-t-2xl shadow-sm">
+    <div class="flex items-center gap-2 min-w-0">
+        <div class="flex flex-col justify-center min-w-0">
+            <h3 class="font-black uppercase tracking-widest truncate text-xs md:text-sm text-zinc-800 dark:text-zinc-100">
+                {{ title }}
+            </h3>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto custom-scrollbar py-1">
+
+        {{ slot }}
+
+    </div>
+</div>

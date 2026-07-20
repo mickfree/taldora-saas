@@ -35,12 +35,14 @@ INSTALLED_APPS = [
     # Third party apps
     'django_cotton',
     'django_extensions',
+    'django_filters',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
     # Apps
     'apps.users',
+    'apps.subscriptions',
 
     # Tailwind
     'tailwind',
@@ -90,7 +92,10 @@ ASGI_APPLICATION = 'core.wsgi.application'
 # Database configuration
 if DEBUG:
     DATABASES = {
-        'default': env.db(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
 else:
     DATABASES = {
@@ -150,6 +155,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Media files (Uploaded proofs, images)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -64,23 +64,19 @@
             <!-- Inicio -->
             <c-nav.sidebar-item href="/" icon="layout-dashboard" label="Dashboard" />
 
-            <!-- Módulos (Con submódulos) -->
-            <c-nav.sidebar-item icon="box" label="Comercial" :active="request.path|slice:':9' == '/modules/'">
-                <c-nav.sidebar-subitem href="#" label="Proformas" icon="layout-dashboard" class="text-base" />
-                <c-nav.sidebar-subitem href="#" label="Tabla de Precios" icon="plus" class="text-base" />
-                <c-nav.sidebar-subitem href="#" label="Configuración" icon="settings" class="text-base" />
+            <!-- Suscripciones -->
+            <c-nav.sidebar-item icon="credit-card" label="Suscripciones"
+                :active="request.path|slice:':15' == '/subscriptions/'">
+                <c-nav.sidebar-subitem href="plan_list" label="Planes" icon="credit-card" class="text-base" />
+                <c-nav.sidebar-subitem href="history_payment_list" label="Historial" icon="history" class="text-base" />
             </c-nav.sidebar-item>
-
-            <!-- Usuarios -->
-            <c-nav.sidebar-item href="#" icon="users" label="Usuarios" />
-
-            <!-- Analíticas -->
-            <c-nav.sidebar-item href="#" icon="chart-bar" label="Analíticas" />
 
             <!-- Configuración -->
-            <c-nav.sidebar-item icon="settings" label="Configuración" :active="request.path|slice:':10' == '/settings/'">
+            <c-nav.sidebar-item icon="settings" label="Configuración"
+                :active="request.path|slice:':10' == '/settings/'">
                 <c-nav.sidebar-subitem href="settings_profile" label="Perfil" icon="user" class="text-base" />
             </c-nav.sidebar-item>
+
         </nav>
     </div>
 

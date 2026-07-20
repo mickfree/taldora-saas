@@ -1,31 +1,33 @@
 <!-- templates/cotton/ui/input.html -->
-<div class="space-y-1.5 {{ attrs.wrapper_class }}">
-    {% if attrs.label %}
-        <label for="{{ attrs.id|default:attrs.name }}" class="block text-xs font-semibold text-slate-700 dark:text-brandMuted">
-            {{ attrs.label }}
-            {% if attrs.required %}<span class="text-rose-500">*</span>{% endif %}
+<c-vars name="" label="" type="text" value="" placeholder="" required=False disabled=False readonly=False autocomplete="" help_text="" errors="" wrapper_class="" class="" />
+
+<div class="space-y-1.5 {{ wrapper_class }}">
+    {% if label %}
+        <label for="{{ attrs.id|default:name }}" class="block text-xs font-semibold text-slate-700 dark:text-brandMuted">
+            {{ label }}
+            {% if required %}<span class="text-rose-500">*</span>{% endif %}
         </label>
     {% endif %}
     
-    <div class="relative" {% if attrs.type == 'password' and attrs.toggle != 'false' %}x-data="{ showPassword: false }"{% endif %}>
+    <div class="relative" {% if type == 'password' and attrs.toggle != 'false' %}x-data="{ showPassword: false }"{% endif %}>
         <input 
-            {% if attrs.type == 'password' and attrs.toggle != 'false' %}
+            {% if type == 'password' and attrs.toggle != 'false' %}
                 :type="showPassword ? 'text' : 'password'"
             {% else %}
-                type="{{ attrs.type|default:'text' }}"
+                type="{{ type }}"
             {% endif %}
-            name="{{ attrs.name }}" 
-            id="{{ attrs.id|default:attrs.name }}" 
-            value="{{ attrs.value|default:'' }}"
-            placeholder="{{ attrs.placeholder|default:'' }}"
-            {% if attrs.required %}required{% endif %}
-            {% if attrs.disabled %}disabled{% endif %}
-            {% if attrs.readonly %}readonly{% endif %}
-            {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %}
-            class="w-full pl-3 {% if attrs.type == 'password' and attrs.toggle != 'false' %}pr-10{% else %}pr-3{% endif %} py-2 text-xs rounded-lg border bg-white dark:bg-brandBg text-slate-800 dark:text-white border-slate-200 dark:border-brandHover focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 placeholder-slate-400 dark:placeholder-brandMuted/50 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed {% if attrs.errors %}border-rose-500 focus:ring-rose-500 focus:border-rose-500{% endif %} {{ attrs.class }}"
+            name="{{ name }}" 
+            id="{{ attrs.id|default:name }}" 
+            value="{{ value }}"
+            placeholder="{{ placeholder }}"
+            {% if required %}required{% endif %}
+            {% if disabled %}disabled{% endif %}
+            {% if readonly %}readonly{% endif %}
+            {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+            class="w-full pl-3 {% if type == 'password' and attrs.toggle != 'false' %}pr-10{% else %}pr-3{% endif %} py-2 text-xs rounded-lg border bg-white dark:bg-brandBg text-slate-800 dark:text-white border-slate-200 dark:border-brandHover focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 placeholder-slate-400 dark:placeholder-brandMuted/50 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed {% if errors %}border-rose-500 focus:ring-rose-500 focus:border-rose-500{% endif %} {{ class }} {{ attrs.class }}"
             {{ attrs.extra }}>
 
-        {% if attrs.type == 'password' and attrs.toggle != 'false' %}
+        {% if type == 'password' and attrs.toggle != 'false' %}
             <button 
                 type="button" 
                 @click="showPassword = !showPassword"
@@ -37,16 +39,16 @@
         {% endif %}
     </div>
 
-    {% if attrs.help_text %}
-        <p class="text-[10px] text-slate-400 dark:text-brandMuted/60 leading-relaxed">{{ attrs.help_text }}</p>
+    {% if help_text %}
+        <p class="text-[10px] text-slate-400 dark:text-brandMuted/60 leading-relaxed">{{ help_text }}</p>
     {% endif %}
 
-    {% if attrs.errors %}
+    {% if errors %}
         <div class="text-[10px] text-rose-500 font-medium space-y-0.5 mt-1">
-            {% for error in attrs.errors %}
+            {% for error in errors %}
                 <p>{{ error }}</p>
             {% empty %}
-                <p>{{ attrs.errors }}</p>
+                <p>{{ errors }}</p>
             {% endfor %}
         </div>
     {% endif %}

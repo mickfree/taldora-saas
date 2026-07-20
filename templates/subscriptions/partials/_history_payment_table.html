@@ -1,0 +1,41 @@
+{% if payment_proofs %}
+<c-table.container>
+    <c-slot name="head">
+        <c-table.th>Estado</c-table.th>
+        <c-table.th>Plan</c-table.th>
+        <c-table.th>Ciclo</c-table.th>
+        <c-table.th>Monto</c-table.th>
+        <c-table.th>Banco / Operación</c-table.th>
+        <c-table.th>Fecha</c-table.th>
+        <c-table.th>Comprobante</c-table.th>
+    </c-slot>
+
+    <c-slot name="body">
+        {% for proof in payment_proofs %}
+        <tr>
+            <c-table.td>
+                <c-table.badge variant="{{ proof.status }}">
+                    {{ proof.get_status_display|default:proof.status }}
+                </c-table.badge>
+            </c-table.td>
+            <c-table.td>{{ proof.plan.name }}</c-table.td>
+            <c-table.td>{{ proof.get_billing_cycle_display }}</c-table.td>
+            <c-table.td>{{ proof.bank_name }} - {{ proof.reference_number }}</c-table.td>
+            <c-table.td>{{ proof.created_at|date:"d/m/Y H:i" }}</c-table.td>
+            <c-table.td class="font-semibold">PEN {{ proof.amount }}</c-table.td>
+            <c-table.td>
+                {% if proof.proof_file %}
+                <a href="{{ proof.proof_file.url }}" target="_blank">
+                    <c-ui.icon name="eye" class="text-slate-400 hover:text-brandAccent" />
+                </a>
+                {% endif %}
+            </c-table.td>
+        </tr>
+        {% endfor %}
+    </c-slot>
+</c-table.container>
+
+<c-table.pagination :page="payment_proofs" target_id="#history-payment-table" form_id="#history-payment-filter-form" />
+{% else %}
+<c-table.empty icon="receipt-off" message="Aún no has registrado comprobantes de pago." />
+{% endif %}

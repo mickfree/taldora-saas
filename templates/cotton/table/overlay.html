@@ -1,0 +1,13 @@
+<c-vars loader_id="" loader_text="Loading..." />
+
+<div id="{{ attrs.id }}" class="flex-1 relative min-h-0 flex flex-col overflow-hidden bg-transparent rounded-b-2xl {{ attrs.class }}">
+
+    {% if loader_id %}
+    <div id="{{ loader_id }}" class="htmx-indicator pointer-events-none [&.htmx-request]:pointer-events-auto absolute inset-0 z-50 bg-zinc-100/90 dark:bg-zinc-950/90 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-200 rounded-b-2xl">
+        <i class='bx bx-loader-alt animate-spin text-3xl text-zinc-400'></i>
+        <span class="text-micro font-black tracking-widest text-zinc-500 mt-2">{{ loader_text }}</span>
+    </div>
+    {% endif %}
+
+    {{ slot }}
+</div>
