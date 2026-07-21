@@ -77,6 +77,14 @@
                 <c-nav.sidebar-subitem href="settings_profile" label="Perfil" icon="user" class="text-base" />
             </c-nav.sidebar-item>
 
+            <!-- Administración -->
+            {% if user.is_staff or user.is_superuser %}
+            <c-nav.sidebar-item icon="shield-check" label="Administración"
+                :active="request.path|slice:':21' == '/subscriptions/admin/'">
+                <c-nav.sidebar-subitem href="admin_payment_list" label="Validar Pagos" icon="checklist"
+                    class="text-base" />
+            </c-nav.sidebar-item>
+            {% endif %}
         </nav>
     </div>
 

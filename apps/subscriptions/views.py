@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from .models import Plan, PaymentProof, PaymentStatus
-from .services import get_user_usage_summary, get_active_subscription
+from .services import get_user_usage_summary, get_active_subscription, approve_payment_proof, reject_payment_proof
 from .forms import PaymentProofForm
 from django.core.paginator import Paginator
 from .filters import PaymentProofFilter
@@ -86,3 +88,68 @@ def history_payment_list(request):
             context,
         )
     return render(request, 'subscriptions/history_payment_list.html', context)
+
+
+@staff_member_required
+def admin_payment_list(request):
+    initial_qs = PaymentProof.objects.all().select_related('user', 'plan', 'reviewed_by').order_by('-created_at')
+    payment_proof_filter = PaymentProofFilter(request.GET, queryset=initial_qs)
+    payment_proofs = payment_proof_filter.qs
+
+    page_number = request.GET.get('page')
+    paginator = Paginator(payment_proofs, 25)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'payment_proofs': page_obj,
+        'payment_proof_filter': payment_proof_filter,
+    }
+
+    if request.headers.get('HX-Request'):
+        return render(
+            request,
+            "subscriptions/partials/_admin_payment_table.html",
+            context,
+        )
+    return render(request, 'subscriptions/admin_payment_list.html', context)
+
+
+@staff_member_required
+@require_POST
+def admin_approve_payment(request, pk):
+    proof = get_object_or_404(PaymentProof, pk=pk)
+    approve_payment_proof(proof, admin_user=request.user)
+    messages.success(request, f"Comprobante #{proof.id} de {proof.user.username} aprobado exitosamente. Suscripción activada.")
+
+    return _render_admin_payment_table_response(request)
+
+
+@staff_member_required
+@require_POST
+def admin_reject_payment(request, pk):
+    proof = get_object_or_404(PaymentProof, pk=pk)
+    admin_notes = request.POST.get('admin_notes', '').strip()
+    reject_payment_proof(proof, admin_user=request.user, admin_notes=admin_notes)
+    messages.warning(request, f"Comprobante #{proof.id} de {proof.user.username} ha sido rechazado.")
+
+    return _render_admin_payment_table_response(request)
+
+
+def _render_admin_payment_table_response(request):
+    initial_qs = PaymentProof.objects.all().select_related('user', 'plan', 'reviewed_by').order_by('-created_at')
+    payment_proof_filter = PaymentProofFilter(request.GET, queryset=initial_qs)
+    payment_proofs = payment_proof_filter.qs
+
+    page_number = request.GET.get('page')
+    paginator = Paginator(payment_proofs, 25)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'payment_proofs': page_obj,
+        'payment_proof_filter': payment_proof_filter,
+    }
+
+    if request.headers.get('HX-Request'):
+        return render(request, "subscriptions/partials/_admin_payment_table.html", context)
+    return redirect('admin_payment_list')
+

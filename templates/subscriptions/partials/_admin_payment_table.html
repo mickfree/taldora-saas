@@ -1,0 +1,120 @@
+{% if payment_proofs %}
+<c-table.container>
+    <c-slot name="head">
+        <c-table.th>Cliente</c-table.th>
+        <c-table.th>Plan Solicitado</c-table.th>
+        <c-table.th>Monto</c-table.th>
+        <c-table.th>Banco / Operación</c-table.th>
+        <c-table.th>Fecha Envío</c-table.th>
+        <c-table.th>Estado</c-table.th>
+        <c-table.th>Comprobante</c-table.th>
+        <c-table.th class="text-right">Acción / Validación</c-table.th>
+    </c-slot>
+
+    <c-slot name="body">
+        {% for proof in payment_proofs %}
+        <tr>
+            <!-- Cliente -->
+            <c-table.td>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-slate-800 dark:text-white">{{ proof.user.username }}</span>
+                    <span class="text-xs text-slate-400 dark:text-brandMuted">{{ proof.user.email }}</span>
+                </div>
+            </c-table.td>
+
+            <!-- Plan Solicitado -->
+            <c-table.td>
+                <div class="flex flex-col">
+                    <span class="font-medium text-slate-700 dark:text-slate-200">{{ proof.plan.name }}</span>
+                    <span class="text-[11px] text-slate-400 dark:text-brandMuted">{{ proof.get_billing_cycle_display }}</span>
+                </div>
+            </c-table.td>
+
+            <!-- Monto -->
+            <c-table.td class="font-semibold text-slate-800 dark:text-white">
+                PEN {{ proof.amount }}
+            </c-table.td>
+
+            <!-- Banco / Ref -->
+            <c-table.td>
+                <div class="flex flex-col">
+                    <span class="font-medium text-slate-700 dark:text-slate-200">{{ proof.bank_name }}</span>
+                    <span class="text-xs font-mono text-slate-500 dark:text-brandMuted">{{ proof.reference_number }}</span>
+                </div>
+            </c-table.td>
+
+            <!-- Fecha -->
+            <c-table.td class="text-xs text-slate-500 dark:text-brandMuted">
+                {{ proof.created_at|date:"d/m/Y H:i" }}
+            </c-table.td>
+
+            <!-- Estado -->
+            <c-table.td>
+                <c-table.badge variant="{{ proof.status }}">
+                    {{ proof.get_status_display|default:proof.status }}
+                </c-table.badge>
+            </c-table.td>
+
+            <!-- Comprobante -->
+            <c-table.td>
+                {% if proof.proof_file %}
+                <c-ui.modal title="Comprobante #{{ proof.id }} - {{ proof.user.username }}" size="xl">
+                    <c-slot name="trigger">
+                        <button type="button" 
+                                title="Ver comprobante de pago"
+                                class="p-1.5 rounded-lg text-slate-400 hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50 transition-colors inline-flex items-center gap-1 text-xs">
+                            <c-ui.icon name="file-check" class="text-base" />
+                        </button>
+                    </c-slot>
+
+                    <div class="flex flex-col items-center justify-center p-2 bg-slate-950/5 dark:bg-black/40 rounded-xl overflow-auto">
+                        <img src="{{ proof.proof_file.url }}" alt="Comprobante de Pago" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md mb-2" />
+                    </div>
+                </c-ui.modal>
+                {% else %}
+                <span class="text-xs text-slate-400 italic">Sin adjunto</span>
+                {% endif %}
+            </c-table.td>
+
+            <!-- Acción / Validación -->
+            <c-table.td class="text-right">
+                <div class="flex items-center justify-end gap-2">
+                    {% if proof.status == 'PENDING' %}
+                        <!-- Modal Completo de Validación -->
+                        <c-ui.modal title="Validar Comprobante #{{ proof.id }} - {{ proof.user.username }}" size="xl">
+                            <c-slot name="trigger">
+                                <button type="button" 
+                                        title="Validar y procesar este pago"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-600 text-white hover:bg-primary-700 dark:bg-brandAccent dark:text-brandBg dark:hover:bg-brandAccent/90 text-xs font-semibold shadow-sm transition-all hover:scale-105 active:scale-95">
+                                    <c-ui.icon name="shield-check" class="text-sm" />
+                                    <span>Validar Pago</span>
+                                </button>
+                            </c-slot>
+
+                            {% include 'subscriptions/partials/_admin_payment_validation_form.html' with proof=proof %}
+                        </c-ui.modal>
+                    {% else %}
+                        <!-- Info de Revisión -->
+                        <div class="flex flex-col text-right text-[11px] text-slate-500 dark:text-brandMuted leading-tight">
+                            {% if proof.reviewed_by %}
+                            <span>Revisado por <strong>{{ proof.reviewed_by.username }}</strong></span>
+                            <span>{{ proof.reviewed_at|date:"d/m/Y H:i" }}</span>
+                            {% endif %}
+                            {% if proof.admin_notes %}
+                            <span class="text-rose-500 dark:text-rose-400 italic mt-0.5 max-w-[180px] truncate" title="{{ proof.admin_notes }}">
+                                "{{ proof.admin_notes }}"
+                            </span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </c-table.td>
+        </tr>
+        {% endfor %}
+    </c-slot>
+</c-table.container>
+
+<c-table.pagination :page="payment_proofs" target_id="#admin-payment-table" form_id="#admin-payment-filter-form" />
+{% else %}
+<c-table.empty icon="receipt-off" message="No se encontraron comprobantes de pago que coincidan con la búsqueda." />
+{% endif %}

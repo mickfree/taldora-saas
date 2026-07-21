@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+{% include 'subscriptions/partials/_breadcrumbs.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="admin-payment"> 
+    <!-- Header -->
+    <c-ui.header title="Gestión y Validación de Pagos"
+        description="Revisa y aprueba o rechaza los comprobantes de depósito enviados por los clientes para activar sus suscripciones.">
+        <c-slot name="icon">
+            <c-ui.icon name="shield-check" class="text-sm" />
+        </c-slot>
+    </c-ui.header>
+
+    <!-- Lista y Filtros de Comprobantes -->
+    <div>
+        <c-table.header title="Comprobantes de Pago">
+        </c-table.header>
+
+        <c-table.filter_bar url="{% url 'admin_payment_list' %}" target="#admin-payment-table"
+            form_id="admin-payment-filter-form">
+            <c-ui.input_filter
+                name="search"
+                placeholder="Buscar usuario, email, banco, ref..." 
+                label="Buscar"
+                :value="request.GET.search" 
+                wrapper_class="col-span-1 md:col-span-2" 
+            />
+            <c-ui.select
+                :field="payment_proof_filter.form.status"
+                empty_label="Todos los estados"
+                wrapper_class="col-span-1 md:col-span-1"
+            />
+            <c-ui.select
+                :field="payment_proof_filter.form.billing_cycle"
+                empty_label="Todos los ciclos"
+                wrapper_class="col-span-1 md:col-span-1"
+            />
+        </c-table.filter_bar>
+
+        <c-table.overlay title="Comprobantes">
+            <div id="admin-payment-table">
+                {% include 'subscriptions/partials/_admin_payment_table.html' %}
+            </div>
+        </c-table.overlay>
+    </div>
+
+</div>
+{% endblock %}

@@ -14,6 +14,8 @@ class PaymentProofFilter(django_filters.FilterSet):
         if not value:
             return queryset
         return queryset.filter(
+            Q(user__username__icontains=value) |
+            Q(user__email__icontains=value) |
             Q(bank_name__icontains=value) |
             Q(reference_number__icontains=value) |
             Q(plan__name__icontains=value) |

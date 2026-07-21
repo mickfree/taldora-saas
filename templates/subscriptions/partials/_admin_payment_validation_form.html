@@ -1,0 +1,114 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left" x-data="{ action: 'approve' }">
+    <!-- Columna Izquierda: Imagen del comprobante -->
+    <div class="flex flex-col items-center justify-center p-3 bg-slate-950/5 dark:bg-black/40 rounded-xl border border-slate-200 dark:border-brandHover">
+        {% if proof.proof_file %}
+        <img src="{{ proof.proof_file.url }}" alt="Comprobante de Pago" class="max-w-full max-h-[50vh] object-contain rounded-lg shadow-sm mb-2" />
+        <a href="{{ proof.proof_file.url }}" target="_blank" download class="text-xs text-primary-600 dark:text-brandAccent hover:underline inline-flex items-center gap-1">
+            <c-ui.icon name="download" class="text-xs" /> Ver / Descargar imagen original
+        </a>
+        {% else %}
+        <div class="py-12 text-center text-slate-400 dark:text-brandMuted">
+            <c-ui.icon name="receipt-off" class="text-3xl mb-1" />
+            <p class="text-xs">Sin comprobante adjunto</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Columna Derecha: Información y Decisión -->
+    <div class="flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-brandMuted border-b border-slate-100 dark:border-brandHover pb-1">
+                Resumen de la Solicitud
+            </h4>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                    <span class="text-slate-400 dark:text-brandMuted block">Cliente:</span>
+                    <span class="font-semibold text-slate-800 dark:text-white">{{ proof.user.username }}</span>
+                    <span class="text-[11px] text-slate-500 block truncate">{{ proof.user.email }}</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 dark:text-brandMuted block">Plan Solicitado:</span>
+                    <span class="font-semibold text-slate-800 dark:text-white">{{ proof.plan.name }}</span>
+                    <span class="text-[11px] text-slate-500 block">{{ proof.get_billing_cycle_display }}</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 dark:text-brandMuted block">Monto Depositado:</span>
+                    <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">PEN {{ proof.amount }}</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 dark:text-brandMuted block">Banco / Entidad:</span>
+                    <span class="font-medium text-slate-800 dark:text-white">{{ proof.bank_name }}</span>
+                </div>
+                <div class="col-span-2">
+                    <span class="text-slate-400 dark:text-brandMuted block">N° de Operación / Ref:</span>
+                    <span class="font-mono font-semibold text-slate-800 dark:text-white text-xs bg-slate-100 dark:bg-brandHover/50 px-2 py-1 rounded inline-block border border-slate-200 dark:border-brandHover mt-0.5">
+                        {{ proof.reference_number }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selector y Formulario de Decisión -->
+        <div class="border-t border-slate-100 dark:border-brandHover pt-4 space-y-3">
+            <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                Tomar Decisión:
+            </h4>
+
+            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-brandHover/40 rounded-xl">
+                <button type="button" 
+                        @click="action = 'approve'"
+                        :class="action === 'approve' ? 'bg-emerald-600 text-white shadow-sm font-semibold' : 'text-slate-600 dark:text-brandMuted hover:text-slate-900 dark:hover:text-white'"
+                        class="py-1.5 px-3 rounded-lg text-xs transition-all flex items-center justify-center gap-1.5">
+                    <c-ui.icon name="check" class="text-sm" />
+                    Aprobar Pago
+                </button>
+                <button type="button" 
+                        @click="action = 'reject'"
+                        :class="action === 'reject' ? 'bg-rose-600 text-white shadow-sm font-semibold' : 'text-slate-600 dark:text-brandMuted hover:text-slate-900 dark:hover:text-white'"
+                        class="py-1.5 px-3 rounded-lg text-xs transition-all flex items-center justify-center gap-1.5">
+                    <c-ui.icon name="x" class="text-sm" />
+                    Rechazar Pago
+                </button>
+            </div>
+
+            <!-- Formulario de Aprobación -->
+            <form x-show="action === 'approve'"
+                    hx-post="{% url 'admin_approve_payment' proof.id %}"
+                    hx-target="#admin-payment-table"
+                    hx-swap="innerHTML"
+                    @submit="close()">
+                {% csrf_token %}
+                <p class="text-xs text-slate-500 dark:text-brandMuted mb-3 leading-relaxed">
+                    Al aprobar este comprobante, el plan <strong>{{ proof.plan.name }}</strong> ({{ proof.get_billing_cycle_display }}) se activará inmediatamente para <strong>{{ proof.user.username }}</strong>.
+                </p>
+                <button type="submit" 
+                        class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow transition-all flex items-center justify-center gap-2">
+                    <c-ui.icon name="check-circle" class="text-base" />
+                    Confirmar y Activar Suscripción
+                </button>
+            </form>
+
+            <!-- Formulario de Rechazo -->
+            <form x-show="action === 'reject'"
+                    hx-post="{% url 'admin_reject_payment' proof.id %}"
+                    hx-target="#admin-payment-table"
+                    hx-swap="innerHTML"
+                    @submit="close()"
+                    x-cloak>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Motivo del rechazo (visible para el usuario)</label>
+                    <textarea name="admin_notes" rows="2" required
+                                placeholder="Ej: El número de operación no figura en la banca por internet o el comprobante es borroso."
+                                class="w-full rounded-lg text-xs bg-slate-50 dark:bg-brandHover/50 border border-slate-200 dark:border-brandHover p-2 text-slate-800 dark:text-white focus:outline-none focus:border-rose-500 transition-colors"></textarea>
+                </div>
+                <button type="submit" 
+                        class="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow transition-all flex items-center justify-center gap-2">
+                    <c-ui.icon name="x" class="text-base" />
+                    Confirmar Rechazo
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

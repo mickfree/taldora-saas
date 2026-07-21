@@ -13,6 +13,13 @@
                 <c-ui.icon name="receipt" class="text-sm {% if page == 'history_payment_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
                 <span>Historial de Pagos</span>
             </a>
+            {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'admin_payment_list' %}" 
+               class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg transition-colors whitespace-nowrap {% if page == 'admin_payment_list' %}bg-slate-100 dark:bg-brandHover font-semibold text-slate-900 dark:text-white{% else %}text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50{% endif %}">
+                <c-ui.icon name="shield-check" class="text-sm {% if page == 'admin_payment_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
+                <span>Validar Pagos (Admin)</span>
+            </a>
+            {% endif %}
         </c-slot>
     </c-ui.breadcrumbs_item>
 
@@ -20,6 +27,8 @@
         <c-ui.breadcrumbs_item icon="shopping-cart" label="Planes y Suscripciones" active="true" />
     {% elif page == 'history_payment_list' %}
         <c-ui.breadcrumbs_item icon="receipt" label="Historial de Pagos" active="true" />
+    {% elif page == 'admin_payment_list' %}
+        <c-ui.breadcrumbs_item icon="shield-check" label="Validar Pagos (Admin)" active="true" />
     {% endif %}
 </c-ui.breadcrumbs>
 {% endwith %}
