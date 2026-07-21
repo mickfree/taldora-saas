@@ -118,15 +118,27 @@ def increment_request_count(user, amount=1):
 
 
 @transaction.atomic
-def approve_payment_proof(payment_proof, admin_user):
+def approve_payment_proof(payment_proof, admin_user=None):
     """
     Aprueba un comprobante de pago:
     1. Desactiva suscripciones activas previas.
     2. Crea una nueva suscripción activa con el plan y ciclo solicitados.
     3. Marca el comprobante como Aprobado.
     """
-    if payment_proof.status == PaymentStatus.APPROVED:
-        return payment_proof.user.subscriptions.filter(status=SubscriptionStatus.ACTIVE).first()
+    active_sub = Subscription.objects.filter(
+        user=payment_proof.user,
+        status=SubscriptionStatus.ACTIVE
+    ).select_related('plan').first()
+
+    # Si ya tiene una suscripción activa para este mismo plan, devolverla
+    if active_sub and active_sub.plan_id == payment_proof.plan_id and not active_sub.plan.is_free:
+        if payment_proof.status != PaymentStatus.APPROVED:
+            payment_proof.status = PaymentStatus.APPROVED
+            if admin_user:
+                payment_proof.reviewed_by = admin_user
+            payment_proof.reviewed_at = timezone.now()
+            payment_proof.save(update_fields=['status', 'reviewed_by', 'reviewed_at'])
+        return active_sub
 
     now = timezone.now()
     
@@ -154,7 +166,8 @@ def approve_payment_proof(payment_proof, admin_user):
 
     # 4. Actualizar estado del comprobante
     payment_proof.status = PaymentStatus.APPROVED
-    payment_proof.reviewed_by = admin_user
+    if admin_user:
+        payment_proof.reviewed_by = admin_user
     payment_proof.reviewed_at = now
     payment_proof.save(update_fields=['status', 'reviewed_by', 'reviewed_at'])
 

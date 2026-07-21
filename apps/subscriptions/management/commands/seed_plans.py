@@ -17,7 +17,7 @@ class Command(BaseCommand):
         },
         {
             'code': '10k',
-            'name': '10K',
+            'name': 'Plan 10K',
             'monthly_requests': 10000,
             'price_monthly': 50.00,
             'price_annual': 480.00,
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         },
         {
             'code': '30k',
-            'name': '30K',
+            'name': 'Plan 30K',
             'monthly_requests': 30000,
             'price_monthly': 100.00,
             'price_annual': 960.00,
@@ -35,7 +35,7 @@ class Command(BaseCommand):
         },
         {
             'code': '50k',
-            'name': '50K',
+            'name': 'Plan 50K',
             'monthly_requests': 50000,
             'price_monthly': 150.00,
             'price_annual': 1440.00,
@@ -44,7 +44,7 @@ class Command(BaseCommand):
         },
         {
             'code': '100k',
-            'name': '100K',
+            'name': 'Plan 100K',
             'monthly_requests': 100000,
             'price_monthly': 250.00,
             'price_annual': 2400.00,
