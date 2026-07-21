@@ -1,4 +1,13 @@
-<form action="{% url 'submit_payment_proof' %}" method="POST" enctype="multipart/form-data" class="space-y-4">
+<form 
+    method="post" 
+    id="payment-proof-form" 
+    action="{% url 'submit_payment_proof' %}"
+    hx-post="{% url 'submit_payment_proof' %}" 
+    hx-target="#container-plans" 
+    hx-swap="innerHTML" 
+    enctype="multipart/form-data" 
+    class="space-y-4">
+
     {% csrf_token %}
 
     <div class="space-y-1.5">

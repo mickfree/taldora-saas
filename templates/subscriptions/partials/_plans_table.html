@@ -1,0 +1,90 @@
+<c-table.container class="rounded-b-xl" id="container-plans-table">
+    <c-slot name="head">
+        <c-table.th>Plan</c-table.th>
+        <c-table.th>Peticiones / Mes</c-table.th>
+        <c-table.th>Precio Mensual</c-table.th>
+        <c-table.th>Precio Anual</c-table.th>
+        <c-table.th>Costo x Req.</c-table.th>
+        <c-table.th class="text-right">Acción</c-table.th>
+    </c-slot>
+
+    <c-slot name="body">
+        {% for plan in plans %}
+        <tr
+            class="hover:bg-slate-50/50 dark:hover:bg-brandHover/20 transition-colors {% if usage.plan.id == plan.id %}bg-brandAccent/5 dark:bg-brandAccent/10{% endif %}">
+            <c-table.td>
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-slate-900 dark:text-white text-sm">{{ plan.name }}</span>
+                    {% if usage.plan.id == plan.id %}
+                    <span class="btn-confirm px-2 py-0.5 rounded-full">Actual</span>
+                    {% elif plan.is_free %}
+                    <span class="btn-ghost px-2 py-0.5 rounded-full">Gratuito</span>
+                    {% endif %}
+                </div>
+            </c-table.td>
+
+            <c-table.td>
+                <span class="font-bold text-slate-800 dark:text-slate-200">{{ plan.monthly_requests|stringformat:"d" }}</span>
+                <span class="text-slate-400 dark:text-brandMuted/70 text-[11px]">req/mes</span>
+            </c-table.td>
+
+            <c-table.td>
+                {% if plan.is_free %}
+                <span class="font-semibold text-slate-600 dark:text-slate-400">PEN 0.00</span>
+                {% else %}
+                <span class="font-bold text-slate-900 dark:text-white">PEN {{ plan.price_monthly }}</span>
+                <span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium block">1 / mes</span>
+                {% endif %}
+            </c-table.td>
+
+            <c-table.td>
+                {% if plan.is_free %}
+                <span class="font-semibold text-slate-600 dark:text-slate-400">PEN 0.00</span>
+                {% else %}
+                <span class="font-bold text-slate-900 dark:text-white">PEN {{ plan.price_annual }}</span>
+                <span class="text-[10px] text-amber-600 dark:text-amber-400 font-medium block">PEN {{ plan.effective_monthly_annual_price }}/mes</span>
+                {% endif %}
+            </c-table.td>
+
+            <c-table.td>
+                <span class="text-slate-600 dark:text-slate-400 text-xs">PEN {{ plan.cost_per_request }}</span>
+            </c-table.td>
+
+            <c-table.td class="text-right">
+                {% if usage.plan.id == plan.id %}
+                <button disabled class="btn-ghost text-xs py-1.5 px-3 cursor-default">
+                    Plan Activo
+                </button>
+                {% elif plan.is_free %}
+                <button disabled class="btn-edit text-xs py-1.5 px-3 cursor-default">
+                    Incluido
+                </button>
+                {% else %}
+                <c-ui.modal size="base">
+                    <c-slot name="trigger">
+                        <button type="button" 
+                                title="Cambiar Plan"
+                                class="btn-edit text-xs py-1.5 px-3">
+                            Cambiar Plan
+                        </button>
+                    </c-slot>
+
+                    <c-slot name="header">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">
+                                Registrar Comprobante de Pago
+                            </h3>
+                            <p class="text-xs text-slate-500 dark:text-brandMuted">
+                                Selecciona tu plan y adjunta la información de pago.
+                            </p>
+                        </div>
+                    </c-slot>
+
+                    {% include 'subscriptions/partials/_payment_proof_form.html' %}
+                </c-ui.modal>
+                {% endif %}
+            </c-table.td>
+        </tr>
+        {% endfor %}
+    </c-slot>
+</c-table.container>

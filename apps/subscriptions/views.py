@@ -33,6 +33,8 @@ def plan_list(request):
 
 @login_required
 def submit_payment_proof(request):
+    plans = Plan.objects.filter(is_active=True).order_by('display_order', 'price_monthly')
+    usage_summary = get_user_usage_summary(request.user)
     if request.method == 'POST':
         form = PaymentProofForm(request.POST, request.FILES)
         if form.is_valid():
@@ -44,18 +46,21 @@ def submit_payment_proof(request):
                 request,
                 '¡Comprobante de depósito enviado con éxito! Un administrador revisará tu pago a la brevedad para activar tu plan.'
             )
-            return redirect('my_subscription')
-        else:
-            messages.error(request, 'Por favor, verifica los datos e intenta de nuevo.')
-            plans = Plan.objects.filter(is_active=True).order_by('display_order', 'price_monthly')
-            usage_summary = get_user_usage_summary(request.user)
-            return render(request, 'subscriptions/plans.html', {
+            context = {
                 'plans': plans,
                 'usage': usage_summary,
                 'form': form,
-                'open_modal': True
-            })
-    return redirect('plan_list')
+            }
+            if request.headers.get('HX-Request') == 'true':
+                return render(request, 'subscriptions/partials/_plans_table.html', context)
+        else:
+            messages.error(request, 'Por favor, verifica los datos e intenta de nuevo.')
+            context = {
+                'plans': plans,
+                'usage': usage_summary,
+                'form': form,
+            }
+    return render(request, 'subscriptions/plans.html', context)
 
 
 @login_required
