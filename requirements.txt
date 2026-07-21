@@ -39,3 +39,4 @@ tzdata==2026.3
 urllib3==2.7.0
 whitenoise==6.12.0
 django-filter==26.1
+beautifulsoup4>=4.12.0

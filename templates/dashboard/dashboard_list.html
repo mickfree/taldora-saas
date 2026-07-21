@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Taldora SaaS Scraping{% endblock %}
+
+{% block breadcrumbs %}
+<c-ui.breadcrumbs>
+    <c-ui.breadcrumbs_item href="#">Dashboard</c-ui.breadcrumbs_item>
+    <c-ui.breadcrumbs_item current="true">Consumo & API Scraping</c-ui.breadcrumbs_item>
+</c-ui.breadcrumbs>
+{% endblock %}
+
+{% block content %}
+<div>
+    <!-- Header Principal -->
+    <c-ui.header title="Panel de Consumo & API Scraping"
+        description="Monitorea tus peticiones en tiempo real, gestiona tus credenciales de acceso y realiza pruebas directas.">
+        <c-slot name="icon">
+            <c-ui.icon name="chart-line" class="text-sm" />
+        </c-slot>
+        <c-ui.button type="button" class="btn-purple">
+            <c-ui.icon name="rocket" class="text-sm" />
+            Mejorar Plan
+        </c-ui.button>
+    </c-ui.header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+
+        <!-- card para consumo -->
+        {% include 'dashboard/partials/_monthly_usage_card.html' %}
+        
+        <c-ui.card title="Fecha de reinicio del plan" icon="calendar">
+            <h1 class="text-2xl dark:text-white">
+                {% if usage.end_date %}
+                    {{ usage.end_date|date:"d/m/Y" }}
+                {% else %}
+                    Sin vencimiento
+                {% endif %}
+            </h1>
+        </c-ui.card>
+        <c-ui.card title="Tipo de cambio (USD)" icon="coin">
+            <div class="space-y-1.5">
+                {% if exchange_rate %}
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500 dark:text-brandMuted font-medium text-xs">Compra:</span>
+                        <span class="text-base font-bold text-slate-800 dark:text-white">
+                            S/ {{ exchange_rate.buy_rate|floatformat:3 }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500 dark:text-brandMuted font-medium text-xs">Venta:</span>
+                        <span class="text-base font-bold text-slate-800 dark:text-white">
+                            S/ {{ exchange_rate.sell_rate|floatformat:3 }}
+                        </span>
+                    </div>
+                    <div class="pt-1.5 text-[9px] text-slate-400 dark:text-brandMuted/50 text-right leading-none truncate" title="Fuente: {{ exchange_rate.source }}">
+                        Fuente: {{ exchange_rate.source }}
+                    </div>
+                {% else %}
+                    <div class="text-slate-400 dark:text-brandMuted/50 text-xs py-2 text-center">
+                        No disponible
+                    </div>
+                {% endif %}
+            </div>
+        </c-ui.card>
+        <c-ui.card title="Token Api" icon="api" class="col-span-1 md:col-span-2">
+            <c-slot name="button">
+                <c-ui.button_hx 
+                    type="button" 
+                    class="btn-red py-2 px-3 text-xs"
+                    hx_post="{% url 'regenerate_token' %}"
+                    hx_target="#api-token-container"
+                    hx_swap="outerHTML"
+                >
+                    <c-ui.icon name="refresh" class="text-sm" />
+                    Regenerar Token
+                </c-ui.button_hx>
+            </c-slot>
+
+            {% include 'dashboard/partials/_api_token_field.html' %}
+        </c-ui.card>
+    </div>
+
+    <!-- Analíticas con Gráficos ApexCharts -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-4">
+        
+        <!-- Gráfico 1: Consumo Diario (Área) -->
+        <div class="lg:col-span-8 bg-white dark:bg-brandHover/20 border border-slate-200 dark:border-brandHover rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Volumen de Consultas Diarias</h3>
+                    <p class="text-xs text-slate-500 dark:text-brandMuted">Histórico de peticiones procesadas en los últimos 14 días.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> Exitosas
+                    </span>
+                    <span class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Fallidas
+                    </span>
+                </div>
+            </div>
+            
+            <div id="usageHistoryChart" class="w-full min-h-[280px]"></div>
+        </div>
+
+        <!-- Gráfico 2: Distribución por Servicio (Donut) -->
+        <div class="lg:col-span-4 bg-white dark:bg-brandHover/20 border border-slate-200 dark:border-brandHover rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1">Distribución por Servicio</h3>
+                <p class="text-xs text-slate-500 dark:text-brandMuted mb-4">Porcentaje de uso según conector de scraping.</p>
+            </div>
+            
+            <div id="servicesDonutChart" class="w-full min-h-[240px] flex items-center justify-center"></div>
+
+            <div class="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                    <span class="text-slate-600 dark:text-slate-300 font-medium">SUNAT RUC (42%)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span class="text-slate-600 dark:text-slate-300 font-medium">RENIEC DNI (35%)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span class="text-slate-600 dark:text-slate-300 font-medium">Vehicular (15%)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                    <span class="text-slate-600 dark:text-slate-300 font-medium">Otros (8%)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Tabla de Historial de Peticiones Recientes -->
+    <div class="bg-white dark:bg-brandHover/20 border border-slate-200 dark:border-brandHover rounded-2xl p-6 shadow-sm space-y-4 mt-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white">Registro de Peticiones Recientes</h3>
+                <p class="text-xs text-slate-500 dark:text-brandMuted">Monitoreo en tiempo real de las últimas consultas realizadas por tu Token API.</p>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button @click="filterStatus = 'all'" :class="filterStatus === 'all' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'" class="px-3 py-1.5 rounded-xl text-xs transition-colors">Todas</button>
+                <button @click="filterStatus = '200'" :class="filterStatus === '200' ? 'bg-emerald-600 text-white font-bold' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'" class="px-3 py-1.5 rounded-xl text-xs transition-colors">Exitosas (200)</button>
+                <button @click="filterStatus = 'error'" :class="filterStatus === 'error' ? 'bg-rose-600 text-white font-bold' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'" class="px-3 py-1.5 rounded-xl text-xs transition-colors">Errores / 404</button>
+            </div>
+        </div>
+
+        <!-- Tabla Estilizada -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-900/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-brandMuted border-b border-slate-200 dark:border-slate-800">
+                        <th class="py-3 px-4">ID Petición</th>
+                        <th class="py-3 px-4">Servicio</th>
+                        <th class="py-3 px-4">Parámetro</th>
+                        <th class="py-3 px-4">Estado</th>
+                        <th class="py-3 px-4">Latencia</th>
+                        <th class="py-3 px-4">Nodo Scraper</th>
+                        <th class="py-3 px-4 text-right">Tiempo</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs text-slate-700 dark:text-slate-300">
+                    {% for item in recent_queries %}
+                    <tr x-show="filterStatus === 'all' || (filterStatus === '200' && {{ item.status }} == 200) || (filterStatus === 'error' && {{ item.status }} != 200)" 
+                        class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-3 px-4 font-mono font-medium text-slate-900 dark:text-slate-200">{{ item.id }}</td>
+                        <td class="py-3 px-4">
+                            <span class="inline-flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-200">
+                                {% if item.service_code == 'sunat_ruc' %}
+                                    <i class="ti ti-building text-indigo-500"></i>
+                                {% elif item.service_code == 'reniec_dni' %}
+                                    <i class="ti ti-id text-emerald-500"></i>
+                                {% elif item.service_code == 'sunarp_placa' %}
+                                    <i class="ti ti-car text-amber-500"></i>
+                                {% else %}
+                                    <i class="ti ti-heart-handshake text-purple-500"></i>
+                                {% endif %}
+                                {{ item.service }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 font-mono text-slate-600 dark:text-slate-400">{{ item.query }}</td>
+                        <td class="py-3 px-4">
+                            {% if item.status == 200 %}
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+                                    200 OK
+                                </span>
+                            {% else %}
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400">
+                                    {{ item.status }} {{ item.status_label }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-4 font-mono text-slate-500 dark:text-slate-400">{{ item.latency }}</td>
+                        <td class="py-3 px-4 text-slate-500 dark:text-brandMuted text-[11px]">{{ item.source }}</td>
+                        <td class="py-3 px-4 text-right text-slate-400 text-[11px]">{{ item.timestamp }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

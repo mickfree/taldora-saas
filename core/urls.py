@@ -16,8 +16,13 @@ urlpatterns = [
     # Subscriptions urls
     path('subscriptions/', include('apps.subscriptions.urls')),
     
+    # API urls
+    path('', include('apps.apis.urls')),
+    
     # Core app urls
     path('', views.home, name='home'),
+    path('settings/token/regenerate/', views.regenerate_token, name='regenerate_token'),
+    path('dashboard/monthly-usage/', views.refresh_monthly_usage, name='refresh_monthly_usage'),
 ]
 
 # Incluir rutas de desarrollo solo si DEBUG está activado

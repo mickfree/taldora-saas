@@ -1,0 +1,70 @@
+from django.http import JsonResponse
+from apps.users.models import APIToken
+from apps.subscriptions.services import can_make_request, increment_request_count
+from apps.scrapers.services import get_today_exchange_rate
+
+def api_tipo_cambio(request):
+    """
+    Public API endpoint to query today's USD exchange rate in PEN.
+    Matches routing: api.decoleta.com/v1/tipo-cambio/ (served as /v1/tipo-cambio/)
+    """
+    # 1. Retrieve the token from headers or query parameters
+    auth_header = request.headers.get('Authorization', '')
+    token_str = None
+    if auth_header.startswith('Bearer '):
+        token_str = auth_header.split(' ')[1]
+    elif auth_header:
+        token_str = auth_header
+        
+    if not token_str:
+        token_str = request.headers.get('X-API-Key')
+        
+    if not token_str:
+        token_str = request.GET.get('api_key')
+        
+    if not token_str:
+        return JsonResponse({
+            "success": False,
+            "error": "No se proporcionó un token de API. Envíe el token mediante la cabecera Authorization (Bearer), X-API-Key o el parámetro api_key."
+        }, status=401)
+        
+    # 2. Authenticate the token
+    token_obj = APIToken.objects.filter(token=token_str, is_active=True).select_related('user').first()
+    if not token_obj:
+        return JsonResponse({
+            "success": False,
+            "error": "Token de API inválido o inactivo."
+        }, status=401)
+        
+    user = token_obj.user
+    
+    # 3. Check subscription limits
+    if not can_make_request(user):
+        return JsonResponse({
+            "success": False,
+            "error": "Límite de peticiones de tu plan excedido para el mes actual."
+        }, status=429)
+        
+    # 4. Fetch exchange rate and track usage
+    try:
+        exchange_rate = get_today_exchange_rate()
+        if not exchange_rate:
+            return JsonResponse({
+                "success": False,
+                "error": "Tipo de cambio temporalmente no disponible."
+            }, status=503)
+            
+        increment_request_count(user)
+        
+        return JsonResponse({
+            "success": True,
+            "compra": float(exchange_rate.buy_rate),
+            "venta": float(exchange_rate.sell_rate),
+            "fecha": exchange_rate.date.strftime("%Y-%m-%d"),
+            "fuente": exchange_rate.source
+        })
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "error": f"Error interno al obtener el tipo de cambio: {str(e)}"
+        }, status=500)

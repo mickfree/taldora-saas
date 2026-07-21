@@ -1,30 +1,36 @@
 from .base import *
+import sys
 
 # Ensure debug is true for local environment
 DEBUG = True
 
-# Add development-only apps
-INSTALLED_APPS += [
-    'debug_toolbar',
-    'django_browser_reload',
-]
+# Check if we are running unit tests
+IS_RUNNING_TESTS = 'test' in sys.argv or any('test' in arg for arg in sys.argv)
 
-# Add development-only middleware
-# DebugToolbarMiddleware should be as early as possible in the list, but after encode/decode middlewares
-# BrowserReloadMiddleware should be near the end or beginning
-MIDDLEWARE.insert(2, 'debug_toolbar.middleware.DebugToolbarMiddleware')
-MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
+# Add development-only apps and middleware only if not running tests
+if not IS_RUNNING_TESTS:
+    INSTALLED_APPS += [
+        'debug_toolbar',
+        'django_browser_reload',
+    ]
 
-# Required for django-debug-toolbar
-INTERNAL_IPS = [
-    '127.0.0.1',
-    '::1',
-]
+    # Add development-only middleware
+    # DebugToolbarMiddleware should be as early as possible in the list, but after encode/decode middlewares
+    # BrowserReloadMiddleware should be near the end or beginning
+    MIDDLEWARE.insert(2, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
 
-# Force toolbar display in local development (useful when accessing via Docker, localhost or different IP)
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
-}
+    # Required for django-debug-toolbar
+    INTERNAL_IPS = [
+        '127.0.0.1',
+        '::1',
+    ]
+
+    # Force toolbar display in local development
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+        'IS_RUNNING_TESTS': False,
+    }
 
 
 # Email Configuration for testing

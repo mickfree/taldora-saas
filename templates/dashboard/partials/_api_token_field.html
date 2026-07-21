@@ -1,0 +1,35 @@
+<!-- templates/partials/_api_token_field.html -->
+<div id="api-token-container" class="space-y-1.5" x-data="{ copied: false, showPassword: false, token: '{{ api_token }}' }">
+    <label class="block text-xs font-semibold text-slate-700 dark:text-brandMuted">
+        Secret API Key (Bearer Token)
+    </label>
+    
+    <div class="relative flex items-center">
+        <input 
+            type="text" 
+            readonly 
+            value="{{ api_token|slice:':20' }}...{{ api_token|slice:'-4:' }}" 
+            id="api-token-input"
+            data-full-token="{{ api_token }}"
+            class="w-full pl-3 pr-24 py-2 text-xs font-mono rounded-lg border bg-white dark:bg-brandBg text-slate-800 dark:text-white border-slate-200 dark:border-brandHover focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 placeholder-slate-400 dark:placeholder-brandMuted/50 transition-all duration-150"
+        />
+
+        <div class="absolute right-1.5 flex items-center space-x-1">
+            <!-- Botón de Copiar -->
+            <button 
+                type="button" 
+                @click="navigator.clipboard.writeText(token); copied = true; setTimeout(() => copied = false, 2000)"
+                class="btn-confirm py-1 text-xs px-1"
+            >
+                <span x-show="!copied" class="flex items-center gap-1 px-2.5 py-1">
+                    <c-ui.icon name="copy" class="text-sm" />
+                    <span>Copiar</span>
+                </span>
+                <span x-show="copied" class="flex items-center gap-1 px-2.5 py-1" x-cloak>
+                    <c-ui.icon name="check" class="text-sm" />
+                    <span>¡Copiado!</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>

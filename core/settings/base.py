@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     # Apps
     'apps.users',
     'apps.subscriptions',
+    'apps.scrapers',
+    'apps.apis',
 
     # Tailwind
     'tailwind',

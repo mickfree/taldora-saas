@@ -1,0 +1,35 @@
+<!-- templates/partials/_monthly_usage_card.html -->
+<div id="monthly-usage-card">
+    <c-ui.card title="Consumo mensual" icon="chart-bar">
+        <c-slot name="button">
+            <c-ui.button_hx 
+                type="button" 
+                class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                hx_get="{% url 'refresh_monthly_usage' %}"
+                hx_target="#monthly-usage-card"
+                hx_swap="outerHTML"
+                title="Refrescar consumo"
+            >
+                <c-ui.icon name="refresh" class="text-xs [.htmx-request_&]:animate-spin" />
+            </c-ui.button_hx>
+        </c-slot>
+
+        <div class="space-y-2">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl dark:text-white">
+                    {{ usage.requests_used }} / {{ usage.monthly_requests }}
+                </h1>
+                <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                    {{ usage.percentage_used|floatformat:0 }}%
+                </span>
+            </div>
+
+            <div class="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div 
+                    class="h-full bg-emerald-500 rounded-full transition-all duration-500 ease-out"
+                    style="width: {{ usage.percentage_used|floatformat:0 }}%"
+                ></div>
+            </div>
+        </div>
+    </c-ui.card>
+</div>
