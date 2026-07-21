@@ -17,8 +17,6 @@
                     <span class="font-bold text-slate-900 dark:text-white text-sm">{{ plan.name }}</span>
                     {% if usage.plan.id == plan.id %}
                     <span class="btn-confirm px-2 py-0.5 rounded-full">Actual</span>
-                    {% elif plan.is_free %}
-                    <span class="btn-ghost px-2 py-0.5 rounded-full">Gratuito</span>
                     {% endif %}
                 </div>
             </c-table.td>
