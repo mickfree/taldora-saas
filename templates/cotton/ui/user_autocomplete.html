@@ -1,0 +1,85 @@
+<!-- templates/cotton/ui/user_autocomplete.html -->
+<c-vars name="user_id" label="Cliente / Email" placeholder="Buscar por email o usuario..." wrapper_class="" class="" />
+
+<div x-data="{
+        open: false,
+        selectedLabel: '',
+        selectedValue: '',
+        selectUser(user) {
+            this.selectedLabel = user.username + ' (' + user.email + ')';
+            this.selectedValue = user.id;
+            this.open = false;
+            $nextTick(() => {
+                const hiddenInput = $refs.hiddenInput;
+                hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        },
+        clearSelection() {
+            this.selectedLabel = '';
+            this.selectedValue = '';
+            this.open = false;
+            if ($refs.searchInput) {
+                $refs.searchInput.value = '';
+            }
+            $nextTick(() => {
+                const hiddenInput = $refs.hiddenInput;
+                hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        }
+    }"
+    @click.outside="open = false"
+    class="space-y-1.5 relative {{ wrapper_class }}">
+
+    {% if label %}
+    <label class="block text-xs font-semibold text-slate-700 dark:text-brandMuted">
+        {{ label }}
+    </label>
+    {% endif %}
+
+    <!-- Input Oculto con el ID de usuario seleccionado -->
+    <input type="hidden" name="{{ name }}" x-model="selectedValue" x-ref="hiddenInput">
+
+    <div class="relative flex items-center">
+        <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-brandMuted">
+            <c-ui.icon name="user" class="text-xs" />
+        </div>
+
+        <!-- Input visible de autocompletado -->
+        <input type="text"
+               name="q"
+               x-ref="searchInput"
+               :value="selectedLabel"
+               placeholder="{{ placeholder }}"
+               autocomplete="off"
+               @focus="open = true"
+               @input.stop="open = true; selectedValue = '';"
+               hx-get="{% url 'user_autocomplete' %}"
+               hx-trigger="input delay:250ms, focus"
+               hx-target="#user-autocomplete-results-{{ name }}"
+               hx-swap="innerHTML"
+               class="w-full pl-8 pr-7 py-2 text-xs rounded-lg border bg-white dark:bg-brandBg text-slate-800 dark:text-white border-slate-200 dark:border-brandHover focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 placeholder-slate-400 dark:placeholder-brandMuted/50 transition-all duration-150 {{ class }}" />
+
+        <!-- Botón Limpiar (X) -->
+        <button type="button" 
+                x-show="selectedValue || ( $refs.searchInput && $refs.searchInput.value )"
+                @click="clearSelection()"
+                title="Limpiar selección"
+                class="absolute right-2 text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors p-0.5"
+                x-cloak>
+            <c-ui.icon name="x" class="text-xs" />
+        </button>
+    </div>
+
+    <!-- Dropdown Flotante con Sugerencias -->
+    <div id="user-autocomplete-results-{{ name }}"
+         x-show="open"
+         x-cloak
+         x-transition:enter="transition ease-out duration-100"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         class="absolute left-0 right-0 top-full mt-1 z-50 bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover rounded-xl shadow-xl max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-brandHover">
+    </div>
+</div>

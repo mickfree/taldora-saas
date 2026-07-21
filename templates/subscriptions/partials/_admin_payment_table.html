@@ -44,8 +44,11 @@
             </c-table.td>
 
             <!-- Fecha -->
-            <c-table.td class="text-xs text-slate-500 dark:text-brandMuted">
-                {{ proof.created_at|date:"d/m/Y H:i" }}
+            <c-table.td>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ proof.created_at|date:"d M Y" }}</span>
+                    <span class="text-[11px] font-medium text-slate-400 dark:text-brandMuted uppercase">{{ proof.created_at|date:"H:i" }} HRS</span>
+                </div>
             </c-table.td>
 
             <!-- Estado -->

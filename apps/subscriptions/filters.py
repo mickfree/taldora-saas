@@ -5,10 +5,11 @@ from .models import PaymentProof, PaymentStatus
 class PaymentProofFilter(django_filters.FilterSet):
 
     search = django_filters.CharFilter(method='filter_search', label='Buscar')
+    user_id = django_filters.NumberFilter(field_name='user__id', label='ID de Cliente')
 
     class Meta:
         model = PaymentProof
-        fields = ['search', 'status', 'billing_cycle']
+        fields = ['search', 'status', 'billing_cycle', 'user_id']
 
     def filter_search(self, queryset, name, value):
         if not value:

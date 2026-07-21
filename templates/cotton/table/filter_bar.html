@@ -8,7 +8,7 @@
           hx-target="{{ target }}"
           hx-swap="innerHTML"
           {% if indicator %}hx-indicator="{{ indicator }}"{% endif %}
-          hx-trigger="input delay:500ms from:input[type='text'], input delay:500ms from:input[type='search'], input delay:500ms from:input[type='number'], change from:input[type='date'], change from:input[type='checkbox'], change from:select, select2:change">
+          hx-trigger="input delay:500ms from:input[type='text'], input delay:500ms from:input[type='search'], input delay:500ms from:input[type='number'], change from:input[type='date'], change from:input[type='checkbox'], change from:input[type='hidden'], change from:select, select2:change">
 
         <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 items-end">
             {{ slot }}

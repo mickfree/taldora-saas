@@ -3,12 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 from .models import Plan, PaymentProof, PaymentStatus
 from .services import get_user_usage_summary, get_active_subscription, approve_payment_proof, reject_payment_proof
 from .forms import PaymentProofForm
 from django.core.paginator import Paginator
 from .filters import PaymentProofFilter
 from apps.subscriptions.choices import PaymentStatus, BillingCycle
+
+User = get_user_model()
 
 @login_required
 def plan_list(request):
@@ -152,4 +156,21 @@ def _render_admin_payment_table_response(request):
     if request.headers.get('HX-Request'):
         return render(request, "subscriptions/partials/_admin_payment_table.html", context)
     return redirect('admin_payment_list')
+
+
+@staff_member_required
+def user_autocomplete(request):
+    q = request.GET.get('q', '').strip()
+    users = []
+    if q:
+        users = User.objects.filter(
+            Q(username__icontains=q) | Q(email__icontains=q)
+        ).only('id', 'username', 'email')[:10]
+
+    return render(
+        request,
+        'subscriptions/partials/_user_autocomplete_results.html',
+        {'users': users, 'query': q}
+    )
+
 

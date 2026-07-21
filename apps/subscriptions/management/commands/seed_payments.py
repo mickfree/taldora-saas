@@ -36,22 +36,25 @@ class Command(BaseCommand):
         username = options.get('username')
         clear = options['clear']
 
-        # 1. Obtener o verificar usuario
+        # 1. Obtener o verificar usuarios
         if username:
             user = User.objects.filter(username=username).first()
             if not user:
                 self.stderr.write(self.style.ERROR(f"Usuario '{username}' no encontrado."))
                 return
+            users = [user]
+            user_msg = f"para '{user.username}'"
         else:
-            user = User.objects.first()
-            if not user:
-                # Crear un usuario de prueba si no existe ninguno
+            users = list(User.objects.filter(is_active=True))
+            if not users:
                 user = User.objects.create_user(
                     username='demo_stress',
                     email='demo_stress@example.com',
                     password='Password123!'
                 )
+                users = [user]
                 self.stdout.write(self.style.WARNING("No había usuarios. Se creó el usuario demo 'demo_stress'."))
+            user_msg = f"distribuidos entre {len(users)} usuarios"
 
         # 2. Obtener planes disponibles
         plans = list(Plan.objects.all())
@@ -61,10 +64,13 @@ class Command(BaseCommand):
 
         # 3. Limpiar registros anteriores si se solicita
         if clear:
-            deleted_count, _ = PaymentProof.objects.filter(user=user).delete()
-            self.stdout.write(self.style.WARNING(f"Se eliminaron {deleted_count} comprobantes previos para el usuario {user.username}."))
+            if username:
+                deleted_count, _ = PaymentProof.objects.filter(user=users[0]).delete()
+            else:
+                deleted_count, _ = PaymentProof.objects.all().delete()
+            self.stdout.write(self.style.WARNING(f"Se eliminaron {deleted_count} comprobantes previos."))
 
-        self.stdout.write(self.style.MIGRATE_HEADING(f"Iniciando generación de {count:,} comprobantes de pago para '{user.username}'..."))
+        self.stdout.write(self.style.MIGRATE_HEADING(f"Iniciando generación de {count:,} comprobantes de pago {user_msg}..."))
         start_time = time.time()
 
         banks = ['BCP', 'BBVA', 'Interbank', 'Scotiabank', 'Yape', 'Plin', 'Banco de la Nación']
@@ -76,6 +82,7 @@ class Command(BaseCommand):
         batch_size = 2000
 
         for i in range(1, count + 1):
+            assigned_user = random.choice(users)
             plan = random.choice(plans)
             cycle = random.choice(cycles)
             amount = plan.price_annual if cycle == BillingCycle.ANNUAL else plan.price_monthly
@@ -86,7 +93,7 @@ class Command(BaseCommand):
             created_at = now - timedelta(days=random_days, minutes=random_minutes)
 
             proof = PaymentProof(
-                user=user,
+                user=assigned_user,
                 plan=plan,
                 billing_cycle=cycle,
                 amount=amount,
@@ -111,6 +118,6 @@ class Command(BaseCommand):
         elapsed = time.time() - start_time
         self.stdout.write(
             self.style.SUCCESS(
-                f"\n¡Éxito! Se crearon {count:,} comprobantes de pago para '{user.username}' en {elapsed:.2f} segundos."
+                f"\n¡Éxito! Se crearon {count:,} comprobantes de pago {user_msg} en {elapsed:.2f} segundos."
             )
         )

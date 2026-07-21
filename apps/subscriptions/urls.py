@@ -8,4 +8,5 @@ urlpatterns = [
     path('admin/payments/', views.admin_payment_list, name='admin_payment_list'),
     path('admin/payments/<int:pk>/approve/', views.admin_approve_payment, name='admin_approve_payment'),
     path('admin/payments/<int:pk>/reject/', views.admin_reject_payment, name='admin_reject_payment'),
+    path('admin/users/autocomplete/', views.user_autocomplete, name='user_autocomplete'),
 ]

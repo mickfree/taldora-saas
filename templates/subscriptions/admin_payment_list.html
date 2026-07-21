@@ -18,14 +18,25 @@
     <!-- Lista y Filtros de Comprobantes -->
     <div>
         <c-table.header title="Comprobantes de Pago">
+            <c-ui.button_hx type="button" hx_get="#" hx_target="#container-profile" hx_select="#profile-form"
+                hx_swap="innerHTML" class="btn-confirm">
+                <c-ui.icon name="download" class="text-sm" />
+                Exportar
+            </c-ui.button_hx>
         </c-table.header>
 
         <c-table.filter_bar url="{% url 'admin_payment_list' %}" target="#admin-payment-table"
             form_id="admin-payment-filter-form">
+            <c-ui.user_autocomplete
+                name="user_id"
+                label="Cliente / Email"
+                placeholder="Buscar por email o usuario..."
+                wrapper_class="col-span-1 md:col-span-2"
+            />
             <c-ui.input_filter
                 name="search"
-                placeholder="Buscar usuario, email, banco, ref..." 
-                label="Buscar"
+                placeholder="Banco, N° ref, notas..." 
+                label="Búsqueda libre"
                 :value="request.GET.search" 
                 wrapper_class="col-span-1 md:col-span-2" 
             />
