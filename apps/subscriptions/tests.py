@@ -41,6 +41,8 @@ class SubscriptionsTestCase(TestCase):
         self.assertEqual(summary['monthly_requests'], 250)
         self.assertEqual(summary['requests_used'], 0)
         self.assertEqual(summary['requests_remaining'], 250)
+        expected_reset = (timezone.now().replace(day=1) + relativedelta(months=1)).date()
+        self.assertEqual(summary['reset_date'], expected_reset)
 
     def test_quota_increment_and_limit(self):
         """Verifica que el incremento de peticiones disminuya el saldo disponible."""

@@ -80,6 +80,7 @@ def get_user_usage_summary(user):
     - requests_remaining
     - percentage_used
     - end_date
+    - reset_date
     """
     sub = get_active_subscription(user)
     usage = get_current_monthly_usage(user)
@@ -88,6 +89,9 @@ def get_user_usage_summary(user):
     used = usage.request_count
     remaining = max(0, total_limit - used)
     percentage = round((used / total_limit * 100), 1) if total_limit > 0 else 100.0
+
+    now = timezone.now()
+    reset_date = (now.replace(day=1) + relativedelta(months=1)).date()
 
     return {
         'subscription': sub,
@@ -99,6 +103,7 @@ def get_user_usage_summary(user):
         'requests_remaining': remaining,
         'percentage_used': min(100.0, percentage),
         'end_date': sub.end_date,
+        'reset_date': reset_date,
         'is_free': sub.plan.is_free,
     }
 

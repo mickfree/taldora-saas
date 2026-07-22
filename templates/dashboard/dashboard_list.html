@@ -30,10 +30,10 @@
 
         <c-ui.card title="Fecha de reinicio del plan" icon="calendar">
             <h1 class="text-2xl dark:text-white">
-                {% if usage.end_date %}
-                {{ usage.end_date|date:"d/m/Y" }}
+                {% if usage.reset_date %}
+                {{ usage.reset_date|date:"d/m/Y" }}
                 {% else %}
-                Sin vencimiento
+                -
                 {% endif %}
             </h1>
         </c-ui.card>
