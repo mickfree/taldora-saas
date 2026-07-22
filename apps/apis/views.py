@@ -1,13 +1,17 @@
+import time
 from django.http import JsonResponse
 from apps.users.models import APIToken
 from apps.subscriptions.services import can_make_request, increment_request_count
 from apps.scrapers.services import get_today_exchange_rate
+from .services import log_api_request
 
 def api_tipo_cambio(request):
     """
     Public API endpoint to query today's USD exchange rate in PEN.
     Matches routing: api.decoleta.com/v1/tipo-cambio/ (served as /v1/tipo-cambio/)
     """
+    start_time = time.time()
+    
     # 1. Retrieve the token from headers or query parameters
     auth_header = request.headers.get('Authorization', '')
     token_str = None
@@ -37,9 +41,19 @@ def api_tipo_cambio(request):
         }, status=401)
         
     user = token_obj.user
+    query_date = request.GET.get('fecha', 'Hoy')
     
     # 3. Check subscription limits
     if not can_make_request(user):
+        log_api_request(
+            user=user,
+            service_code='tipo_cambio',
+            service_name='Tipo de Cambio USD',
+            query_param=query_date,
+            status_code=429,
+            start_time=start_time,
+            scraper_node='AWS Lambda us-east-1'
+        )
         return JsonResponse({
             "success": False,
             "error": "Límite de peticiones de tu plan excedido para el mes actual."
@@ -49,12 +63,30 @@ def api_tipo_cambio(request):
     try:
         exchange_rate = get_today_exchange_rate()
         if not exchange_rate:
+            log_api_request(
+                user=user,
+                service_code='tipo_cambio',
+                service_name='Tipo de Cambio USD',
+                query_param=query_date,
+                status_code=503,
+                start_time=start_time,
+                scraper_node='AWS Lambda us-east-1'
+            )
             return JsonResponse({
                 "success": False,
                 "error": "Tipo de cambio temporalmente no disponible."
             }, status=503)
             
         increment_request_count(user)
+        log_api_request(
+            user=user,
+            service_code='tipo_cambio',
+            service_name='Tipo de Cambio USD',
+            query_param=query_date,
+            status_code=200,
+            start_time=start_time,
+            scraper_node='AWS Lambda us-east-1'
+        )
         
         return JsonResponse({
             "success": True,
@@ -64,6 +96,15 @@ def api_tipo_cambio(request):
             "fuente": exchange_rate.source
         })
     except Exception as e:
+        log_api_request(
+            user=user,
+            service_code='tipo_cambio',
+            service_name='Tipo de Cambio USD',
+            query_param=query_date,
+            status_code=500,
+            start_time=start_time,
+            scraper_node='AWS Lambda us-east-1'
+        )
         return JsonResponse({
             "success": False,
             "error": f"Error interno al obtener el tipo de cambio: {str(e)}"

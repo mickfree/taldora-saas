@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('settings/token/regenerate/', views.regenerate_token, name='regenerate_token'),
     path('dashboard/monthly-usage/', views.refresh_monthly_usage, name='refresh_monthly_usage'),
+    path('dashboard/recent-queries/', views.recent_queries_table, name='recent_queries_table'),
 ]
 
 # Incluir rutas de desarrollo solo si DEBUG está activado

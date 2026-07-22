@@ -1,0 +1,57 @@
+{% if page_obj.object_list %}
+<c-table.container>
+    <c-slot name="head">
+        <c-table.th>ID Petición</c-table.th>
+        <c-table.th>Servicio</c-table.th>
+        <c-table.th>Parámetro</c-table.th>
+        <c-table.th>Estado</c-table.th>
+        <c-table.th>Latencia</c-table.th>
+        <c-table.th>Nodo Scraper</c-table.th>
+        <c-table.th class="text-right">Tiempo</c-table.th>
+    </c-slot>
+
+    <c-slot name="body">
+        {% for item in page_obj %}
+        <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+            <c-table.td class="font-mono font-medium text-slate-900 dark:text-slate-200">{{ item.id }}</c-table.td>
+            <c-table.td>
+                <span class="inline-flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-200">
+                    {% if item.service_code == 'sunat_ruc' %}
+                    <i class="ti ti-building text-indigo-500"></i>
+                    {% elif item.service_code == 'reniec_dni' %}
+                    <i class="ti ti-id text-emerald-500"></i>
+                    {% elif item.service_code == 'sunarp_placa' %}
+                    <i class="ti ti-car text-amber-500"></i>
+                    {% elif item.service_code == 'tipo_cambio' %}
+                    <i class="ti ti-coin text-purple-500"></i>
+                    {% else %}
+                    <i class="ti ti-api text-blue-500"></i>
+                    {% endif %}
+                    {{ item.service }}
+                </span>
+            </c-table.td>
+            <c-table.td class="font-mono text-slate-600 dark:text-slate-400">{{ item.query }}</c-table.td>
+            <c-table.td>
+                {% if item.status == 200 %}
+                <c-table.badge variant="success">
+                    200 OK
+                </c-table.badge>
+                {% else %}
+                <c-table.badge variant="error">
+                    {{ item.status }} {{ item.status_label }}
+                </c-table.badge>
+                {% endif %}
+            </c-table.td>
+            <c-table.td class="font-mono text-slate-500 dark:text-slate-400">{{ item.latency }}</c-table.td>
+            <c-table.td class="text-slate-500 dark:text-brandMuted text-[11px]">{{ item.source }}</c-table.td>
+            <c-table.td class="text-right text-slate-400 text-[11px]">{{ item.timestamp }}</c-table.td>
+        </tr>
+        {% endfor %}
+    </c-slot>
+</c-table.container>
+
+<c-table.pagination :page="page_obj" target_id="#recent-queries-table-container"
+    form_id="#recent-queries-filter-form" />
+{% else %}
+<c-table.empty icon="api" message="No se han registrado peticiones API recientemente." />
+{% endif %}
