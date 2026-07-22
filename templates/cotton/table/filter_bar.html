@@ -14,10 +14,22 @@
             {{ slot }}
 
             <div class="col-span-1 flex justify-start">
-                <a href="{{ url }}" title="Limpiar Filtros"
+                <button type="button"
+                    title="Limpiar Filtros"
+                    hx-get="{{ url }}"
+                    {% if target %}hx-target="{{ target }}"{% endif %}
+                    hx-swap="innerHTML"
+                    {% if indicator %}hx-indicator="{{ indicator }}"{% endif %}
+                    @click="
+                        const form = $el.closest('form');
+                        if (form) {
+                            form.querySelectorAll('input, select').forEach(el => { el.value = ''; });
+                            if (window.jQuery) { $(form).find('select').val(null).trigger('change.select2'); }
+                        }
+                    "
                     class="h-[35px] w-[35px] inline-flex items-center justify-center bg-white dark:bg-brandBg border border-slate-200 dark:border-brandHover rounded-lg text-slate-500 dark:text-brandMuted hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 hover:border-blue-300 transition-all duration-150 shadow-sm focus:outline-none">
                     <c-ui.icon name="refresh" class="text-sm" />
-                </a>
+                </button>
             </div>
         </div>
 
