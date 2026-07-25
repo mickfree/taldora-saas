@@ -18,9 +18,9 @@
     <script defer src="{% static 'js/sidebar.js' %}"></script>
     <meta name="htmx-config" content='{"globalViewTransitions":true}'>
     <!-- HTMX (Carga asíncrona súper ligera y dinámica) -->
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
-            integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"
+        integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+        crossorigin="anonymous"></script>
 
     <!-- Alpine.js (Para interactividad y animaciones del cliente, modales, etc. Debe tener 'defer') -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -54,7 +54,7 @@
             <div class="max-w-full mx-auto px-6 h-full flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     {% block breadcrumbs %}
-                        {% block page_title %}{% endblock %}
+                    {% block page_title %}{% endblock %}
                     {% endblock %}
                 </div>
 

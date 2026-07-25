@@ -11,17 +11,22 @@
             <div class="flex items-center gap-3">
                 <!-- Botón de Expandir (Reemplaza al logo D cuando está contraído) -->
                 <button x-show="collapsed" @click="toggleCollapse()"
-                    class="h-7 w-7 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-brandHover dark:hover:bg-brandBg border border-slate-200 dark:border-brandHover text-slate-500 dark:text-brandMuted hover:text-slate-800 dark:hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+                    class="h-min-[340px] w-7 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-brandHover dark:hover:bg-brandBg border border-slate-200 dark:border-brandHover text-slate-500 dark:text-brandMuted hover:text-slate-800 dark:hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95"
                     x-cloak>
                     <c-ui.icon name="layout-sidebar-left-expand" class="text-lg" />
                 </button>
 
-                <span class="text-sm text-brandAccent font-bold whitespace-nowrap" x-show="!collapsed"
+                <div class="flex items-center gap-2" x-show="!collapsed"
                     x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-x-2"
                     x-transition:enter-end="opacity-100 translate-x-0" x-cloak>
-                    Taldora Software
-                </span>
+                    <div class="h-6 w-6 min-w-[24px] rounded-lg overflow-hidden flex items-center justify-center bg-slate-100 border border-slate-200 dark:bg-brandHover/50 dark:border-brandHover">
+                        <img src="{% static 'logo.png' %}" alt="Logo" class="h-full w-full object-cover">
+                    </div>
+                    <span class="text-sm font-semibold tracking-wide text-slate-800 dark:text-white whitespace-nowrap">
+                        Taldora <span class="text-brandAccent font-bold">Software</span>
+                    </span>
+                </div>
             </div>
 
             <!-- Botón de Contraer (Visible en el extremo derecho cuando está expandido) -->
