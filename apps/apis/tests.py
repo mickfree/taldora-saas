@@ -26,7 +26,7 @@ class PublicAPITests(TestCase):
         # 3. Initialize usage record
         self.usage = MonthlyUsage.objects.create(
             user=self.user,
-            year_month=timezone.now().strftime("%Y-%m"),
+            year_month=timezone.localtime().strftime("%Y-%m"),
             request_count=0
         )
         

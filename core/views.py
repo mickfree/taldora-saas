@@ -54,7 +54,7 @@ def recent_queries_table(request):
     api_filter = ApiRequestLogFilter(request.GET, queryset=initial_qs)
     qs = api_filter.qs
 
-    paginator = Paginator(qs, 10)
+    paginator = Paginator(qs, 25)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
@@ -69,7 +69,7 @@ def recent_queries_table(request):
             'status_label': log.status_label,
             'latency': log.formatted_latency,
             'source': log.scraper_node,
-            'timestamp': log.created_at.strftime("%d/%m %H:%M")
+            'timestamp': timezone.localtime(log.created_at)
         })
 
     page_obj.object_list = formatted_items
@@ -89,7 +89,7 @@ def home(request):
     api_filter = ApiRequestLogFilter(request.GET)
 
     # 1. Histórico de volumen diario (últimos 14 días vía Manager)
-    today = timezone.now().date()
+    today = timezone.localdate()
     start_date = today - timedelta(days=13)
 
     daily_logs = ApiRequestLog.objects.get_daily_stats(request.user, start_date)

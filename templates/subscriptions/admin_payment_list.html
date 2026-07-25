@@ -26,7 +26,7 @@
         </c-table.header>
 
         <c-table.filter_bar url="{% url 'admin_payment_list' %}" target="#admin-payment-table"
-            form_id="admin-payment-filter-form">
+            form_id="admin-payment-filter-form" indicator="#admin-payment-loader">
             <c-ui.user_autocomplete
                 name="user_id"
                 label="Cliente / Email"
@@ -52,7 +52,7 @@
             />
         </c-table.filter_bar>
 
-        <c-table.overlay title="Comprobantes">
+        <c-table.overlay title="Comprobantes" loader_id="admin-payment-loader">
             <div id="admin-payment-table">
                 {% include 'subscriptions/partials/_admin_payment_table.html' %}
             </div>

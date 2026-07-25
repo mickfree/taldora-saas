@@ -56,7 +56,7 @@ class Command(BaseCommand):
             scraper_node = random.choice(self.NODES)
             
             # Distribuir fechas en los últimos 14 días
-            random_days = random.randint(0, 13)
+            random_days = random.randint(0, 1)
             random_hours = random.randint(0, 23)
             random_minutes = random.randint(0, 59)
             created_at = now - timedelta(days=random_days, hours=random_hours, minutes=random_minutes)

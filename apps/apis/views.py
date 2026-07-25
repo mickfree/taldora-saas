@@ -8,7 +8,7 @@ from .services import log_api_request
 def api_tipo_cambio(request):
     """
     Public API endpoint to query today's USD exchange rate in PEN.
-    Matches routing: api.decoleta.com/v1/tipo-cambio/ (served as /v1/tipo-cambio/)
+    Matches routing: api.taldora.com/v1/tipo-cambio/ (served as /v1/tipo-cambio/)
     """
     start_time = time.time()
     

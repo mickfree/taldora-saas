@@ -8,12 +8,15 @@
     <title>{% block title %}Taldora Software{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
 
+    <!-- charts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     {% tailwind_css %}
 
     <!-- theme mode and config -->
     <script src="{% static 'js/theme.js' %}"></script>
     <script defer src="{% static 'js/sidebar.js' %}"></script>
-
+    <meta name="htmx-config" content='{"globalViewTransitions":true}'>
     <!-- HTMX (Carga asíncrona súper ligera y dinámica) -->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
             integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"

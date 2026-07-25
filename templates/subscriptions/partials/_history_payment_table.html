@@ -24,7 +24,7 @@
             <c-table.td>
                 <div class="flex flex-col">
                     <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ proof.created_at|date:"d M Y" }}</span>
-                    <span class="text-[11px] font-medium text-slate-400 dark:text-brandMuted uppercase">{{ proof.created_at|date:"H:i" }} HRS</span>
+                    <span class="text-[11px] font-medium text-slate-400 dark:text-brandMuted uppercase">{{ proof.created_at|date:"H:i a" }}</span>
                 </div>
             </c-table.td>
             <c-table.td class="font-semibold">PEN {{ proof.amount }}</c-table.td>
@@ -50,7 +50,7 @@
     </c-slot>
 </c-table.container>
 
-<c-table.pagination :page="payment_proofs" target_id="#history-payment-table" form_id="#history-payment-filter-form" />
+<c-table.pagination :page="payment_proofs" target_id="#history-payment-table" form_id="#history-payment-filter-form" indicator="#history-payment-loader" />
 {% else %}
 <c-table.empty icon="receipt-off" message="Aún no has registrado comprobantes de pago." />
 {% endif %}

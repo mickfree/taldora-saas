@@ -17,7 +17,7 @@ urlpatterns = [
     path('subscriptions/', include('apps.subscriptions.urls')),
     
     # API urls
-    path('', include('apps.apis.urls')),
+    path('api/', include('apps.apis.urls')),
     
     # Core app urls
     path('', views.home, name='home'),

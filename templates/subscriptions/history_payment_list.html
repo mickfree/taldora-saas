@@ -26,7 +26,7 @@
         </c-table.header>
 
         <c-table.filter_bar url="{% url 'history_payment_list' %}" target="#history-payment-table"
-            form_id="history-payment-filter-form">
+            form_id="history-payment-filter-form" indicator="#history-payment-loader">
             <c-ui.input_filter
                 name="search"
                 placeholder="Buscar..." 
@@ -46,7 +46,7 @@
             />
             
         </c-table.filter_bar>
-        <c-table.overlay title="Historial">
+        <c-table.overlay title="Historial" loader_id="history-payment-loader">
             <div id="history-payment-table">
                 {% include 'subscriptions/partials/_history_payment_table.html' %}
             </div>

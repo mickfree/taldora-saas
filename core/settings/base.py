@@ -150,7 +150,7 @@ DEFAULT_FROM_EMAIL = 'Taldora <noreply@taldora.com>'
 
 # Internationalization
 LANGUAGE_CODE = 'es'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Lima'
 USE_I18N = True
 USE_TZ = True
 

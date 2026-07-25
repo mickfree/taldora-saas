@@ -56,7 +56,7 @@ def get_active_subscription(user):
 
 def get_current_year_month():
     """Retorna la cadena YYYY-MM actual."""
-    return timezone.now().strftime("%Y-%m")
+    return timezone.localtime().strftime("%Y-%m")
 
 
 def get_current_monthly_usage(user):

@@ -44,14 +44,17 @@
             </c-table.td>
             <c-table.td class="font-mono text-slate-500 dark:text-slate-400">{{ item.latency }}</c-table.td>
             <c-table.td class="text-slate-500 dark:text-brandMuted text-[11px]">{{ item.source }}</c-table.td>
-            <c-table.td class="text-right text-slate-400 text-[11px]">{{ item.timestamp }}</c-table.td>
+            <c-table.td class="flex flex-col text-right text-slate-400 text-[11px]">
+                <span class="text-xs">{{ item.timestamp|date:"d M Y" }}</span>
+                <span class="text-xs">{{ item.timestamp|date:"H:i a" }}</span>
+            </c-table.td>
         </tr>
         {% endfor %}
     </c-slot>
 </c-table.container>
 
 <c-table.pagination :page="page_obj" target_id="#recent-queries-table-container"
-    form_id="#recent-queries-filter-form" />
+    form_id="#recent-queries-filter-form" indicator="#recent-queries-loader" />
 {% else %}
 <c-table.empty icon="api" message="No se han registrado peticiones API recientemente." />
 {% endif %}
