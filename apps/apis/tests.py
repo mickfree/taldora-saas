@@ -114,21 +114,75 @@ class PublicAPITests(TestCase):
         self.assertFalse(data['success'])
         self.assertIn("No se proporcionó un token de API", data['error'])
 
-    def test_public_api_tipo_cambio_rate_limit_exceeded(self):
-        # Exceed free limit (250 requests)
-        self.usage.request_count = 250
-        self.usage.save()
-        
-        url = reverse('api_tipo_cambio')
+    def test_public_api_ruc_sunat_valid(self):
+        # 20100047218 is BANCO DE CREDITO DEL PERU
+        url = f"{reverse('api_ruc_sunat')}?numero=20100047218"
         headers = {'HTTP_AUTHORIZATION': f"Bearer {self.api_token.token}"}
         
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 429)
+        self.assertEqual(response.status_code, 200)
+        
+        data = response.json()
+        self.assertTrue(data['success'])
+        self.assertEqual(data['data']['ruc'], '20100047218')
+        self.assertIn('BANCO DE CREDITO', data['data']['razon_social'])
+        self.assertEqual(data['data']['estado'], 'ACTIVO')
+        self.assertEqual(data['data']['condicion'], 'HABIDO')
+        
+        self.usage.refresh_from_db()
+        self.assertEqual(self.usage.request_count, 1)
+
+
+    def test_public_api_ruc_sunat_invalid_checksum(self):
+        # 20601234567 has invalid checksum
+        url = f"{reverse('api_ruc_sunat')}?numero=20601234567"
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {self.api_token.token}"}
+        
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 400)
         
         data = response.json()
         self.assertFalse(data['success'])
-        self.assertEqual(data['error'], "Límite de peticiones de tu plan excedido para el mes actual.")
+        self.assertIn("no tiene un formato válido", data['error'])
+
+    def test_public_api_ruc_sunat_missing_param(self):
+        url = reverse('api_ruc_sunat')
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {self.api_token.token}"}
         
-        # Usage remains at 250
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 400)
+        
+        data = response.json()
+        self.assertFalse(data['success'])
+        self.assertIn("Debe proporcionar el parámetro", data['error'])
+
+        self.assertEqual(data['data']['numero_serie'], 'KNABE511AGT007135')
+        self.assertIn('GIMENEZ DIAZ', data['data']['propietarios'])
+        
         self.usage.refresh_from_db()
-        self.assertEqual(self.usage.request_count, 250)
+        self.assertEqual(self.usage.request_count, 1)
+
+    def test_public_api_sunarp_vehicular_invalid_plate(self):
+        url = f"{reverse('api_sunarp_vehicular')}?placa=INVALID12345"
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {self.api_token.token}"}
+        
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 400)
+        
+        data = response.json()
+        self.assertFalse(data['success'])
+        self.assertIn("formato válido", data['error'])
+
+    def test_public_api_sunarp_vehicular_missing_param(self):
+        url = reverse('api_sunarp_vehicular')
+        headers = {'HTTP_AUTHORIZATION': f"Bearer {self.api_token.token}"}
+        
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 400)
+        
+        data = response.json()
+        self.assertFalse(data['success'])
+        self.assertIn("Debe proporcionar el parámetro 'placa'", data['error'])
+
+
+
