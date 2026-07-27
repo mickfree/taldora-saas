@@ -61,6 +61,7 @@
                 <c-ui.modal size="base">
                     <c-slot name="trigger">
                         <button type="button" 
+                                @click="selectedPlanId = '{{ plan.id }}'"
                                 title="Cambiar Plan"
                                 class="btn-edit text-xs py-1.5 px-3">
                             Cambiar Plan

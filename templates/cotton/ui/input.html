@@ -25,7 +25,7 @@
             {% if readonly %}readonly{% endif %}
             {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
             class="w-full pl-3 {% if type == 'password' and attrs.toggle != 'false' %}pr-10{% else %}pr-3{% endif %} py-2 text-xs rounded-lg border bg-white dark:bg-brandBg text-slate-800 dark:text-white border-slate-200 dark:border-brandHover focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 placeholder-slate-400 dark:placeholder-brandMuted/50 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed {% if errors %}border-rose-500 focus:ring-rose-500 focus:border-rose-500{% endif %} {{ class }} {{ attrs.class }}"
-            {{ attrs.extra }}>
+            {{ attrs.extra|safe }}>
 
         {% if type == 'password' and attrs.toggle != 'false' %}
             <button 

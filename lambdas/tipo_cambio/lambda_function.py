@@ -4,6 +4,27 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
+def get_sunat_rate():
+    """
+    Queries the SUNAT exchange rate API (apis.net.pe).
+    Returns buy rate, sell rate, and source string.
+    """
+    url = "https://api.apis.net.pe/v1/tipo-cambio-sunat"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json"
+    }
+    
+    response = requests.get(url, headers=headers, timeout=8)
+    response.raise_for_status()
+    
+    data = response.json()
+    buy = float(data["compra"])
+    sell = float(data["venta"])
+    date_str = data.get("fecha", "")
+    source = f"SUNAT ({date_str})" if date_str else "SUNAT"
+    return buy, sell, source
+
 def get_sbs_rate():
     """
     Scrapes the SBS website for the USD exchange rate (compra/venta).
@@ -36,67 +57,28 @@ def get_sbs_rate():
     sell = float(dollar_row[2].replace(',', ''))
     return buy, sell, "SBS"
 
-def get_bcrp_rate():
-    """
-    Queries the official BCRP API for the SBS USD exchange rates over the last 10 days.
-    Returns the latest available rates, skipping days with non-available ('n.d.') data.
-    """
-    end_dt = datetime.now()
-    start_dt = end_dt - timedelta(days=10)
-    
-    start_str = start_dt.strftime("%Y-%m-%d")
-    end_str = end_dt.strftime("%Y-%m-%d")
-    
-    # Series: PD04639PD (SBS Compra), PD04640PD (SBS Venta)
-    url = f"https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04639PD-PD04640PD/json/{start_str}/{end_str}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-    }
-    
-    response = requests.get(url, headers=headers, timeout=10)
-    response.raise_for_status()
-    
-    data = response.json()
-    periods = data.get("periods", [])
-    if not periods:
-        raise ValueError("El API del BCRP no devolvió períodos de tiempo.")
-    
-    # Loop backwards through periods to find the latest valid day without 'n.d.' (no disponible)
-    for period in reversed(periods):
-        values = period.get("values", [])
-        if len(values) >= 2 and values[0] != "n.d." and values[1] != "n.d.":
-            val1 = float(values[0])
-            val2 = float(values[1])
-            # The Sell rate (Venta) is always higher than the Buy rate (Compra).
-            # This ensures correctness regardless of how BCRP orders the series in the response.
-            buy = min(val1, val2)
-            sell = max(val1, val2)
-            date_str = period.get("name", "") # e.g. "20.Jul.26"
-            return buy, sell, f"BCRP ({date_str})"
-            
-    raise ValueError("No se encontraron registros con tipo de cambio numérico válido en los últimos 10 días en el BCRP.")
 
 def lambda_handler(event, context):
     """
     AWS Lambda entry point.
-    Attempts to scrape SBS, and falls back to BCRP API on failure.
+    Attempts to fetch SUNAT API (1st), then falls back to SBS Web Scraping (2nd).
     """
     source_used = None
     buy_rate = None
     sell_rate = None
     errors = []
-
-    # 1. Try SBS Web Scraping
+    
+    # 1. Try SUNAT API (Primary)
     try:
-        buy_rate, sell_rate, source_used = get_sbs_rate()
-    except Exception as e:
-        errors.append(f"Error SBS Scraping: {str(e)}")
+        buy_rate, sell_rate, source_used = get_sunat_rate()
+    except Exception as e1:
+        errors.append(f"Error SUNAT API: {str(e1)}")
         
-        # 2. Fallback to BCRP API
+        # 2. Fallback to SBS Web Scraping
         try:
-            buy_rate, sell_rate, source_used = get_bcrp_rate()
+            buy_rate, sell_rate, source_used = get_sbs_rate()
         except Exception as e2:
-            errors.append(f"Error BCRP Fallback: {str(e2)}")
+            errors.append(f"Error SBS Scraping: {str(e2)}")
 
     if buy_rate is not None and sell_rate is not None:
         return {

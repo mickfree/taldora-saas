@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static l10n %}
 
 {% block breadcrumbs %}
 {% include 'subscriptions/partials/_breadcrumbs.html' %}
@@ -7,7 +7,21 @@
 
 {% block content %}
 <div id="plans"
-    x-data="{ billingCycle: 'MONTHLY', showDepositModal: {% if open_modal %}true{% else %}false{% endif %}, selectedPlanId: '{{ form.plan.value|default:'' }}' }"
+    x-data="plansComponent({
+        showDepositModal: {% if open_modal %}true{% else %}false{% endif %}, 
+        selectedPlanId: '{{ form.plan.value|default:'' }}',
+        amount: '{{ form.amount.value|default:'' }}',
+        plans: {
+            {% for plan in plans %}
+                {% if not plan.is_free %}
+                    '{{ plan.id }}': {
+                        monthly: '{{ plan.price_monthly|unlocalize }}',
+                        annual: '{{ plan.price_annual|unlocalize }}'
+                    },
+                {% endif %}
+            {% endfor %}
+        }
+    })"
     class="space-y-2">
 
     <!-- Header Principal -->
@@ -31,4 +45,8 @@
         {% include 'subscriptions/partials/_plans_table.html' %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/plans.js' %}"></script>
 {% endblock %}
