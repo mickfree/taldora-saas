@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+{% include 'subscriptions/partials/_admin_breadcrumbs.html' with active_page='admin_exchange_rate_list' %}
+{% endblock %}
+
+{% block content %}
+<div id="admin-exchange-rate"> 
+    <!-- Header -->
+    <c-ui.header title="Base de Datos - Tipo de Cambio"
+        description="Consulta el historial completo de tipos de cambio del dólar (compra y venta) registrados y sincronizados en la base de datos.">
+        <c-slot name="icon">
+            <c-ui.icon name="coins" class="text-sm" />
+        </c-slot>
+    </c-ui.header>
+
+    <!-- Lista y Filtros de Tipo de Cambio -->
+    <div>
+        <c-table.header title="Registros de Tipo de Cambio">
+            <span class="text-xs text-slate-500 dark:text-brandMuted font-medium">
+                Total: {{ rates_page.paginator.count }} registro(s)
+            </span>
+        </c-table.header>
+
+        <c-table.filter_bar url="{% url 'admin_exchange_rate_list' %}" target="#admin-exchange-rate-table"
+            form_id="admin-exchange-rate-filter-form" indicator="#admin-exchange-rate-loader">
+            <c-ui.input_filter
+                name="search"
+                placeholder="Buscar por origen o fecha (YYYY-MM-DD)..." 
+                label="Búsqueda libre"
+                :value="request.GET.search" 
+                wrapper_class="col-span-1 md:col-span-3" 
+            />
+        </c-table.filter_bar>
+
+        <c-table.overlay title="Tipo de Cambio" loader_id="admin-exchange-rate-loader">
+            <div id="admin-exchange-rate-table">
+                {% include 'subscriptions/partials/_admin_exchange_rate_table.html' %}
+            </div>
+        </c-table.overlay>
+    </div>
+
+</div>
+{% endblock %}

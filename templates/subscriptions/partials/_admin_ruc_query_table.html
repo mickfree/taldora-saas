@@ -1,0 +1,68 @@
+{% if rucs_page %}
+<c-table.container>
+    <c-slot name="head">
+        <c-table.th>RUC</c-table.th>
+        <c-table.th>Razón Social / Nombre</c-table.th>
+        <c-table.th>Estado / Condición</c-table.th>
+        <c-table.th>Ubicación / Dirección</c-table.th>
+        <c-table.th>Última Consulta</c-table.th>
+    </c-slot>
+
+    <c-slot name="body">
+        {% for r in rucs_page %}
+        <tr>
+            <c-table.td>
+                <div class="flex items-center gap-2">
+                    <c-ui.icon name="id" class="text-primary-500 text-xs" />
+                    <span class="font-bold text-xs text-slate-800 dark:text-white font-mono">{{ r.ruc }}</span>
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col max-w-xs">
+                    <span class="font-semibold text-xs text-slate-800 dark:text-white truncate" title="{{ r.razon_social }}">{{ r.razon_social }}</span>
+                    {% if r.es_agente_retencion %}
+                    <span class="text-[10px] font-medium text-amber-600 dark:text-amber-400">Agente de Retención</span>
+                    {% endif %}
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col gap-1 items-start">
+                    {% if r.estado == 'ACTIVO' %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        {{ r.estado }}
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                        {{ r.estado }}
+                    </span>
+                    {% endif %}
+                    <span class="text-[11px] text-slate-500 dark:text-brandMuted font-medium">
+                        {{ r.condicion }}
+                    </span>
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col max-w-xs">
+                    <span class="text-xs text-slate-700 dark:text-slate-300 truncate" title="{{ r.direccion }}">{{ r.direccion|default:"-" }}</span>
+                    {% if r.departamento or r.distrito %}
+                    <span class="text-[11px] text-slate-400 dark:text-brandMuted">
+                        {% if r.distrito %}{{ r.distrito }}, {% endif %}{% if r.provincia %}{{ r.provincia }}, {% endif %}{{ r.departamento }}
+                    </span>
+                    {% endif %}
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ r.updated_at|date:"d M Y" }}</span>
+                    <span class="text-[11px] font-medium text-slate-400 dark:text-brandMuted uppercase">{{ r.updated_at|date:"H:i a" }}</span>
+                </div>
+            </c-table.td>
+        </tr>
+        {% endfor %}
+    </c-slot>
+</c-table.container>
+
+<c-table.pagination :page="rucs_page" target_id="#admin-ruc-query-table" form_id="#admin-ruc-query-filter-form" indicator="#admin-ruc-query-loader" />
+{% else %}
+<c-table.empty icon="building" message="No se encontraron consultas RUC en la base de datos." />
+{% endif %}

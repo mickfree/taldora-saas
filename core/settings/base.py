@@ -101,7 +101,6 @@ if DEBUG:
         }
     }
 else:
-    # TODO: HACER EXPLICITO LA DECLARACION DEL DATABASE
     DATABASES = {
         'default': env.db('DATABASE_URL')
     }

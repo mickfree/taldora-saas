@@ -7,6 +7,8 @@ urlpatterns = [
     path('history_payment_list/', views.history_payment_list, name='history_payment_list'),
     path('admin/payments/', views.admin_payment_list, name='admin_payment_list'),
     path('admin/payments/<int:pk>/approve/', views.admin_approve_payment, name='admin_approve_payment'),
-    path('admin/payments/<int:pk>/reject/', views.admin_reject_payment, name='admin_reject_payment'),
+    path('admin/users/', views.admin_user_list, name='admin_user_list'),
+    path('admin/exchange-rates/', views.admin_exchange_rate_list, name='admin_exchange_rate_list'),
+    path('admin/ruc-queries/', views.admin_ruc_query_list, name='admin_ruc_query_list'),
     path('admin/users/autocomplete/', views.user_autocomplete, name='user_autocomplete'),
 ]

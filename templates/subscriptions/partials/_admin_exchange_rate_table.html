@@ -1,0 +1,50 @@
+{% if rates_page %}
+<c-table.container>
+    <c-slot name="head">
+        <c-table.th>Fecha</c-table.th>
+        <c-table.th>Precio Compra (S/)</c-table.th>
+        <c-table.th>Precio Venta (S/)</c-table.th>
+        <c-table.th>Origen de Data</c-table.th>
+        <c-table.th>Última Actualización</c-table.th>
+    </c-slot>
+
+    <c-slot name="body">
+        {% for r in rates_page %}
+        <tr>
+            <c-table.td>
+                <div class="flex items-center gap-2">
+                    <c-ui.icon name="calendar" class="text-slate-400 dark:text-brandMuted text-xs" />
+                    <span class="font-bold text-xs text-slate-800 dark:text-white">{{ r.date|date:"d/m/Y" }}</span>
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <span class="font-bold text-xs text-emerald-600 dark:text-emerald-400">
+                    S/ {{ r.buy_rate }}
+                </span>
+            </c-table.td>
+            <c-table.td>
+                <span class="font-bold text-xs text-blue-600 dark:text-blue-400">
+                    S/ {{ r.sell_rate }}
+                </span>
+            </c-table.td>
+            <c-table.td>
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-brandHover text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-brandHover">
+                    <c-ui.icon name="database" class="text-xs text-primary-500" />
+                    {{ r.source }}
+                </span>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ r.updated_at|date:"d M Y" }}</span>
+                    <span class="text-[11px] font-medium text-slate-400 dark:text-brandMuted uppercase">{{ r.updated_at|date:"H:i a" }}</span>
+                </div>
+            </c-table.td>
+        </tr>
+        {% endfor %}
+    </c-slot>
+</c-table.container>
+
+<c-table.pagination :page="rates_page" target_id="#admin-exchange-rate-table" form_id="#admin-exchange-rate-filter-form" indicator="#admin-exchange-rate-loader" />
+{% else %}
+<c-table.empty icon="coins" message="No se encontraron registros de tipo de cambio en la base de datos." />
+{% endif %}

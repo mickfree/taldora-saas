@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+{% include 'subscriptions/partials/_admin_breadcrumbs.html' with active_page='admin_user_list' %}
+{% endblock %}
+
+{% block content %}
+<div id="admin-user"> 
+    <!-- Header -->
+    <c-ui.header title="Gestión de Usuarios Activos"
+        description="Administra los usuarios registrados en el sistema, consulta su estado, rol y planes de suscripción activos.">
+        <c-slot name="icon">
+            <c-ui.icon name="users" class="text-sm" />
+        </c-slot>
+    </c-ui.header>
+
+    <!-- Dashboard KPI Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Card 1: Total Usuarios -->
+        <c-ui.card title="Total de Usuarios" icon="users">
+            <h1 class="text-2xl dark:text-white">
+                {{ stats.total_users }}
+            </h1>
+        </c-ui.card>
+
+        <!-- Card 2: Usuarios Activos -->
+        <c-ui.card title="Usuarios Activos" icon="users">
+            <h1 class="text-2xl dark:text-white">
+                {{ stats.active_users|default:0 }}
+            </h1>
+        </c-ui.card>
+        
+        <!-- Card 3: Consultas Totales API -->
+        <c-ui.card title="Consultas API Totales" icon="users">
+            <h1 class="text-2xl dark:text-white">
+                {{ stats.total_requests|default:0 }}
+            </h1>
+        </c-ui.card>
+
+        <!-- Card 4: Suscripciones Activas -->
+        <c-ui.card title="Suscripciones Activas" icon="users">
+            <h1 class="text-2xl dark:text-white">
+                {{ stats.active_subscriptions|default:0 }}
+            </h1>
+        </c-ui.card>
+    </div>
+
+    <!-- Analíticas con Gráficos ApexCharts -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+        <!-- Gráfico 1: Volumen de Consultas Diarias (Área) -->
+        <div class="lg:col-span-8 bg-white dark:bg-brandHover/20 border border-slate-200 dark:border-brandHover rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Volumen de Consultas Diarias</h3>
+                    <p class="text-xs text-slate-500 dark:text-brandMuted">Histórico de peticiones procesadas en los últimos 14 días.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> Exitosas
+                    </span>
+                    <span class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Fallidas
+                    </span>
+                </div>
+            </div>
+
+            <div id="usageHistoryChart" class="w-full min-h-[280px]"></div>
+        </div>
+
+        <!-- Gráfico 2: Distribución por Servicio (Donut) -->
+        <div class="lg:col-span-4 bg-white dark:bg-brandHover/20 border border-slate-200 dark:border-brandHover rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1">Distribución por Servicio</h3>
+                <p class="text-xs text-slate-500 dark:text-brandMuted mb-4">Porcentaje de uso según conector de scraping.</p>
+            </div>
+
+            <div id="servicesDonutChart" class="w-full min-h-[240px] flex items-center justify-center"></div>
+
+            <div class="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+                {% if service_distribution %}
+                {% for item in service_distribution %}
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full {% if item.code == 'sunat_ruc' %}bg-indigo-600{% elif item.code == 'reniec_dni' %}bg-emerald-500{% elif item.code == 'sunarp_placa' %}bg-amber-500{% else %}bg-purple-500{% endif %}"></span>
+                    <span class="text-slate-600 dark:text-slate-300 font-medium truncate" title="{{ item.name }}">{{ item.name }} ({{ item.percentage }}%)</span>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-span-2 text-slate-400 text-center py-1 text-xs">Sin peticiones aún</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista y Filtros de Usuarios -->
+    <div>
+        <c-table.header title="Usuarios Registrados">
+            <span class="text-xs text-slate-500 dark:text-brandMuted font-medium">
+                Total: {{ users_page.paginator.count }} usuario(s)
+            </span>
+        </c-table.header>
+
+        <c-table.filter_bar url="{% url 'admin_user_list' %}" target="#admin-user-table"
+            form_id="admin-user-filter-form" indicator="#admin-user-loader">
+            <c-ui.input_filter
+                name="search"
+                placeholder="Buscar por usuario, email o nombre..." 
+                label="Búsqueda libre"
+                :value="request.GET.search" 
+                wrapper_class="col-span-1 md:col-span-2" 
+            />
+            <c-ui.select
+                :field="user_filter.form.status"
+                empty_label="Todos los estados"
+                wrapper_class="col-span-1 md:col-span-1"
+            />
+            <c-ui.select
+                :field="user_filter.form.role"
+                empty_label="Todos los roles"
+                wrapper_class="col-span-1 md:col-span-1"
+            />
+        </c-table.filter_bar>
+
+        <c-table.overlay title="Usuarios" loader_id="admin-user-loader">
+            <div id="admin-user-table">
+                {% include 'subscriptions/partials/_admin_user_table.html' %}
+            </div>
+        </c-table.overlay>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.chartData = {
+        // area chart
+        dates: {{ chart_date_labels_json|safe }},
+        successData: {{ chart_success_series_json|safe }},
+        errorData: {{ chart_error_series_json|safe }},
+        // donut chart
+        donutLabels: {{ donut_labels_json|safe }},
+        donutSeries: {{ donut_series_json|safe }}
+    };
+</script>
+<script src="{% static 'js/charts.js' %}" defer></script>
+{% endblock %}

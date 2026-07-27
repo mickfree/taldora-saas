@@ -5,14 +5,35 @@
         <c-slot name="menu">
             <a href="{% url 'admin_payment_list' %}" 
                class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg transition-colors whitespace-nowrap {% if page == 'admin_payment_list' %}bg-slate-100 dark:bg-brandHover font-semibold text-slate-900 dark:text-white{% else %}text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50{% endif %}">
-                <c-ui.icon name="shield-check" class="text-sm {% if page == 'admin_payment_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
-                <span>Validar Pagos (Admin)</span>
+                <c-ui.icon name="checklist" class="text-sm {% if page == 'admin_payment_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
+                <span>Validar Pagos</span>
+            </a>
+            <a href="{% url 'admin_user_list' %}" 
+               class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg transition-colors whitespace-nowrap {% if page == 'admin_user_list' %}bg-slate-100 dark:bg-brandHover font-semibold text-slate-900 dark:text-white{% else %}text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50{% endif %}">
+                <c-ui.icon name="users" class="text-sm {% if page == 'admin_user_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
+                <span>Usuarios Activos</span>
+            </a>
+            <a href="{% url 'admin_exchange_rate_list' %}" 
+               class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg transition-colors whitespace-nowrap {% if page == 'admin_exchange_rate_list' %}bg-slate-100 dark:bg-brandHover font-semibold text-slate-900 dark:text-white{% else %}text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50{% endif %}">
+                <c-ui.icon name="coins" class="text-sm {% if page == 'admin_exchange_rate_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
+                <span>Tipo de Cambio (BD)</span>
+            </a>
+            <a href="{% url 'admin_ruc_query_list' %}" 
+               class="flex items-center gap-2 px-3 py-2 text-xs rounded-lg transition-colors whitespace-nowrap {% if page == 'admin_ruc_query_list' %}bg-slate-100 dark:bg-brandHover font-semibold text-slate-900 dark:text-white{% else %}text-slate-600 dark:text-brandMuted hover:text-primary-600 dark:hover:text-brandAccent hover:bg-slate-100 dark:hover:bg-brandHover/50{% endif %}">
+                <c-ui.icon name="building" class="text-sm {% if page == 'admin_ruc_query_list' %}text-primary-600 dark:text-brandAccent{% endif %}" />
+                <span>Consultas RUC (BD)</span>
             </a>
         </c-slot>
     </c-ui.breadcrumbs_item>
 
     {% if page == 'admin_payment_list' %}
-        <c-ui.breadcrumbs_item icon="shield-check" label="Validar Pagos (Admin)" active="true" />
+        <c-ui.breadcrumbs_item icon="checklist" label="Validar Pagos" active="true" />
+    {% elif page == 'admin_user_list' %}
+        <c-ui.breadcrumbs_item icon="users" label="Usuarios Activos" active="true" />
+    {% elif page == 'admin_exchange_rate_list' %}
+        <c-ui.breadcrumbs_item icon="coins" label="Tipo de Cambio (BD)" active="true" />
+    {% elif page == 'admin_ruc_query_list' %}
+        <c-ui.breadcrumbs_item icon="building" label="Consultas RUC (BD)" active="true" />
     {% endif %}
 </c-ui.breadcrumbs>
 {% endwith %}

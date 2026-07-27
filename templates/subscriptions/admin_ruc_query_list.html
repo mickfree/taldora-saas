@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+{% include 'subscriptions/partials/_admin_breadcrumbs.html' with active_page='admin_ruc_query_list' %}
+{% endblock %}
+
+{% block content %}
+<div id="admin-ruc-query"> 
+    <!-- Header -->
+    <c-ui.header title="Base de Datos - Consultas RUC SUNAT"
+        description="Explora el historial y la lista de RUCs de contribuyentes consultados y almacenados en la base de datos local.">
+        <c-slot name="icon">
+            <c-ui.icon name="building" class="text-sm" />
+        </c-slot>
+    </c-ui.header>
+
+    <!-- Lista y Filtros de Consultas RUC -->
+    <div>
+        <c-table.header title="Contribuyentes Consultados (RUC)">
+            <span class="text-xs text-slate-500 dark:text-brandMuted font-medium">
+                Total: {{ rucs_page.paginator.count }} RUC(s)
+            </span>
+        </c-table.header>
+
+        <c-table.filter_bar url="{% url 'admin_ruc_query_list' %}" target="#admin-ruc-query-table"
+            form_id="admin-ruc-query-filter-form" indicator="#admin-ruc-query-loader">
+            <c-ui.input_filter
+                name="search"
+                placeholder="Buscar por RUC, razón social, dirección, distrito..." 
+                label="Búsqueda libre"
+                :value="request.GET.search" 
+                wrapper_class="col-span-1 md:col-span-2" 
+            />
+            <c-ui.input_filter
+                name="estado"
+                placeholder="ACTIVO, HABIDO..." 
+                label="Estado / Condición"
+                :value="request.GET.estado" 
+                wrapper_class="col-span-1 md:col-span-1" 
+            />
+        </c-table.filter_bar>
+
+        <c-table.overlay title="Consultas RUC" loader_id="admin-ruc-query-loader">
+            <div id="admin-ruc-query-table">
+                {% include 'subscriptions/partials/_admin_ruc_query_table.html' %}
+            </div>
+        </c-table.overlay>
+    </div>
+
+</div>
+{% endblock %}

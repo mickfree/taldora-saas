@@ -86,8 +86,10 @@
             {% if user.is_staff or user.is_superuser %}
             <c-nav.sidebar-item icon="shield-check" label="Administración"
                 :active="request.path|slice:':21' == '/subscriptions/admin/'">
-                <c-nav.sidebar-subitem href="admin_payment_list" label="Validar Pagos" icon="checklist"
-                    class="text-base" />
+                <c-nav.sidebar-subitem href="admin_payment_list" label="Validar Pagos" icon="checklist" class="text-base" />
+                <c-nav.sidebar-subitem href="admin_user_list" label="Usuarios Activos" icon="users" class="text-base" />
+                <c-nav.sidebar-subitem href="admin_exchange_rate_list" label="Tipo de Cambio" icon="coins" class="text-base" />
+                <c-nav.sidebar-subitem href="admin_ruc_query_list" label="Consultas RUC" icon="building" class="text-base" />
             </c-nav.sidebar-item>
             {% endif %}
         </nav>
