@@ -5,8 +5,8 @@
 
 {% block breadcrumbs %}
 <c-ui.breadcrumbs>
-    <c-ui.breadcrumbs_item href="#">Dashboard</c-ui.breadcrumbs_item>
-    <c-ui.breadcrumbs_item current="true">Consumo & API Scraping</c-ui.breadcrumbs_item>
+    <c-ui.breadcrumbs_item href="{% url 'home' %}" icon="home" label="Inicio" />
+    <c-ui.breadcrumbs_item icon="layout-dashboard" label="Dashboard" active="true" />
 </c-ui.breadcrumbs>
 {% endblock %}
 
@@ -18,7 +18,7 @@
         <c-slot name="icon">
             <c-ui.icon name="chart-line" class="text-sm" />
         </c-slot>
-        <c-ui.button type="button" class="btn-purple" href="{% url 'plan_list' %}">
+        <c-ui.button type="button" class="btn-yellow" href="{% url 'plan_list' %}">
             <c-ui.icon name="rocket" class="text-sm" />
             Mejorar Plan
         </c-ui.button>

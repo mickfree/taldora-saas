@@ -67,30 +67,29 @@
         <!-- Menú / Módulos -->
         <nav class="py-4 px-3 space-y-1.5">
             <!-- Inicio -->
-            <c-nav.sidebar-item href="/" icon="layout-dashboard" label="Dashboard" />
+            <c-nav.sidebar-item href="/" icon="layout-dashboard" label="Dashboard"
+                :active="request.resolver_match.url_name == 'home'" />
 
             <!-- Suscripciones -->
-            <c-nav.sidebar-item icon="credit-card" label="Suscripciones"
-                :active="request.path|slice:':15' == '/subscriptions/'">
-                <c-nav.sidebar-subitem href="plan_list" label="Planes" icon="credit-card" class="text-base" />
-                <c-nav.sidebar-subitem href="history_payment_list" label="Historial" icon="history" class="text-base" />
-            </c-nav.sidebar-item>
+            <c-nav.sidebar-item icon="credit-card" label="Planes" href="{% url 'plan_list' %}"
+                :active="request.resolver_match.url_name == 'plan_list'" />
+            <c-nav.sidebar-item icon="history" label="Historial" href="{% url 'history_payment_list' %}"
+                :active="request.resolver_match.url_name == 'history_payment_list'" />
 
             <!-- Configuración -->
-            <c-nav.sidebar-item icon="settings" label="Configuración"
-                :active="request.path|slice:':10' == '/settings/'">
-                <c-nav.sidebar-subitem href="settings_profile" label="Perfil" icon="user" class="text-base" />
-            </c-nav.sidebar-item>
+            <c-nav.sidebar-item icon="user" label="Perfil" href="{% url 'settings_profile' %}"
+                :active="request.path|slice:':10' == '/settings/'" />
 
             <!-- Administración -->
             {% if user.is_staff or user.is_superuser %}
-            <c-nav.sidebar-item icon="shield-check" label="Administración"
-                :active="request.path|slice:':21' == '/subscriptions/admin/'">
-                <c-nav.sidebar-subitem href="admin_payment_list" label="Validar Pagos" icon="checklist" class="text-base" />
-                <c-nav.sidebar-subitem href="admin_user_list" label="Usuarios Activos" icon="users" class="text-base" />
-                <c-nav.sidebar-subitem href="admin_exchange_rate_list" label="Tipo de Cambio" icon="coins" class="text-base" />
-                <c-nav.sidebar-subitem href="admin_ruc_query_list" label="Consultas RUC" icon="building" class="text-base" />
-            </c-nav.sidebar-item>
+            <c-nav.sidebar-item icon="checklist" label="Validar Pagos" href="{% url 'admin_payment_list' %}"
+                :active="request.resolver_match.url_name == 'admin_payment_list'" />
+            <c-nav.sidebar-item icon="users" label="Usuarios Activos" href="{% url 'admin_user_list' %}"
+                :active="request.resolver_match.url_name == 'admin_user_list'" />
+            <c-nav.sidebar-item icon="coins" label="Tipo de Cambio" href="{% url 'admin_exchange_rate_list' %}"
+                :active="request.resolver_match.url_name == 'admin_exchange_rate_list'" />
+            <c-nav.sidebar-item icon="building" label="Consultas RUC" href="{% url 'admin_ruc_query_list' %}"
+                :active="request.resolver_match.url_name == 'admin_ruc_query_list'" />
             {% endif %}
         </nav>
     </div>

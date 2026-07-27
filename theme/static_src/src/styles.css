@@ -44,7 +44,7 @@
     }
 
     .btn-yellow {
-        @apply bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-5 py-2 rounded-lg shadow-sm hover:shadow active:translate-y-px transition-all duration-200;
+        @apply bg-amber-400 hover:bg-amber-500 text-white text-xs font-semibold px-5 py-2 rounded-lg shadow-sm hover:shadow active:translate-y-px transition-all duration-200;
     }
 
     .btn-orange {
