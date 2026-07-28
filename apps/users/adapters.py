@@ -20,6 +20,15 @@ def send_celery_email(subject, body, from_email, to, html_message=None):
         raise e
 
 class CeleryAccountAdapter(DefaultAccountAdapter):
+    def populate_username(self, request, user):
+        from allauth.account.utils import user_username
+        if user.email and not user_username(user):
+            username_prefix = user.email.split('@')[0]
+            username = self.generate_unique_username([username_prefix])
+            user_username(user, username)
+        else:
+            super().populate_username(request, user)
+
     def send_mail(self, template_prefix, email, context):
         msg = self.render_mail(template_prefix, email, context)
         send_celery_email.delay(
