@@ -1,15 +1,15 @@
 <c-vars variant="default" class="" />
 
 {% if variant == "success" or variant == "APPROVED" %}
-    <span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 px-2 py-0.5 rounded font-bold inline-block {{ attrs.class }}">
+    <span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 px-2 py-0.5 rounded font-bold inline-block {{ attrs.class }}">
         {{ slot }}
     </span>
 {% elif variant == "danger" or variant == "REJECTED" or variant == "error" %}
-    <span class="bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400 px-2 py-0.5 rounded font-bold inline-block {{ attrs.class }}">
+    <span class="bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 px-2 py-0.5 rounded font-bold inline-block {{ attrs.class }}">
         {{ slot }}
     </span>
 {% elif variant == "warning" or variant == "PENDING" %}
-    <span class="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400 px-2 py-0.5 rounded font-bold inline-block {{ attrs.class }}">
+    <span class="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded font-bold inline-block {{ attrs.class }}">
         {{ slot }}
     </span>
 {% else %}

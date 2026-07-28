@@ -133,6 +133,9 @@
     <div class="mt-6">
         <c-table.header title="Registro de Peticiones Recientes"
             description="Monitoreo en tiempo real de las últimas consultas realizadas por tu Token API.">
+            <span id="recent-queries-total" class="text-xs text-slate-500 dark:text-brandMuted font-medium">
+                Total: {{ total }} registro(s)
+            </span>
         </c-table.header>
 
         <c-table.filter_bar url="{% url 'recent_queries_table' %}" target="#recent-queries-table-container"

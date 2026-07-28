@@ -3,8 +3,9 @@
     <c-slot name="head">
         <c-table.th>RUC</c-table.th>
         <c-table.th>Razón Social / Nombre</c-table.th>
-        <c-table.th>Estado / Condición</c-table.th>
         <c-table.th>Ubicación / Dirección</c-table.th>
+        <c-table.th>Estado</c-table.th>
+        <c-table.th>Condición</c-table.th>
         <c-table.th>Última Consulta</c-table.th>
     </c-slot>
 
@@ -13,8 +14,9 @@
         <tr>
             <c-table.td>
                 <div class="flex items-center gap-2">
-                    <c-ui.icon name="id" class="text-primary-500 text-xs" />
-                    <span class="font-bold text-xs text-slate-800 dark:text-white font-mono">{{ r.ruc }}</span>
+                    <c-table.badge variant="default">
+                        {{ r.ruc }}
+                    </c-table.badge>                    
                 </div>
             </c-table.td>
             <c-table.td>
@@ -26,22 +28,6 @@
                 </div>
             </c-table.td>
             <c-table.td>
-                <div class="flex flex-col gap-1 items-start">
-                    {% if r.estado == 'ACTIVO' %}
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                        {{ r.estado }}
-                    </span>
-                    {% else %}
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
-                        {{ r.estado }}
-                    </span>
-                    {% endif %}
-                    <span class="text-[11px] text-slate-500 dark:text-brandMuted font-medium">
-                        {{ r.condicion }}
-                    </span>
-                </div>
-            </c-table.td>
-            <c-table.td>
                 <div class="flex flex-col max-w-xs">
                     <span class="text-xs text-slate-700 dark:text-slate-300 truncate" title="{{ r.direccion }}">{{ r.direccion|default:"-" }}</span>
                     {% if r.departamento or r.distrito %}
@@ -49,6 +35,26 @@
                         {% if r.distrito %}{{ r.distrito }}, {% endif %}{% if r.provincia %}{{ r.provincia }}, {% endif %}{{ r.departamento }}
                     </span>
                     {% endif %}
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col gap-1 items-start">
+                    {% if r.estado == 'ACTIVO' %}
+                    <c-table.badge variant="success">
+                        {{ r.estado }}
+                    </c-table.badge>
+                    {% else %}
+                    <c-table.badge variant="danger">
+                        {{ r.estado }}
+                    </c-table.badge>
+                    {% endif %}
+                </div>
+            </c-table.td>
+            <c-table.td>
+                <div class="flex flex-col gap-1 items-start">
+                    <c-table.badge variant="info">
+                        {{ r.condicion }}
+                    </c-table.badge>
                 </div>
             </c-table.td>
             <c-table.td>

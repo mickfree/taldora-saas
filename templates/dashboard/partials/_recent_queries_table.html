@@ -1,3 +1,7 @@
+<span id="recent-queries-total" hx-swap-oob="true" class="text-xs text-slate-500 dark:text-brandMuted font-medium">
+    Total: {{ total }} registro(s)
+</span>
+
 {% if page_obj.object_list %}
 <c-table.container>
     <c-slot name="head">
@@ -16,17 +20,6 @@
             <c-table.td class="font-mono font-medium text-slate-900 dark:text-slate-200">{{ item.id }}</c-table.td>
             <c-table.td>
                 <span class="inline-flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-200">
-                    {% if item.service_code == 'sunat_ruc' %}
-                    <i class="ti ti-building text-indigo-500"></i>
-                    {% elif item.service_code == 'reniec_dni' %}
-                    <i class="ti ti-id text-emerald-500"></i>
-                    {% elif item.service_code == 'sunarp_placa' %}
-                    <i class="ti ti-car text-amber-500"></i>
-                    {% elif item.service_code == 'tipo_cambio' %}
-                    <i class="ti ti-coin text-purple-500"></i>
-                    {% else %}
-                    <i class="ti ti-api text-blue-500"></i>
-                    {% endif %}
                     {{ item.service }}
                 </span>
             </c-table.td>

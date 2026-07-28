@@ -16,7 +16,7 @@
             <c-table.td>
                 <div class="flex items-center gap-3">
                     <div class="h-8 w-8 rounded-full bg-primary-100 dark:bg-brandHover text-primary-700 dark:text-brandAccent flex items-center justify-center font-bold text-xs">
-                        {{ u.username|slice:":2"|upper }}
+                        {{ u.username|slice:":1"|upper }}
                     </div>
                     <div class="flex flex-col">
                         <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ u.username }}</span>
@@ -31,28 +31,24 @@
             </c-table.td>
             <c-table.td>
                 {% if u.is_active %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                <c-table.badge variant="success">
                     Activo
-                </span>
+                </c-table.badge>
                 {% else %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
-                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span>
+                <c-table.badge variant="danger">
                     Inactivo
-                </span>
+                </c-table.badge>
                 {% endif %}
             </c-table.td>
             <c-table.td>
                 {% if u.is_staff or u.is_superuser %}
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-                    <c-ui.icon name="shield" class="text-xs" />
+                <c-table.badge variant="warning">
                     Admin / Staff
-                </span>
+                </c-table.badge>
                 {% else %}
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-slate-100 dark:bg-brandHover text-slate-600 dark:text-brandMuted">
-                    <c-ui.icon name="user" class="text-xs" />
+                <c-table.badge variant="default">
                     Cliente
-                </span>
+                </c-table.badge>
                 {% endif %}
             </c-table.td>
             <c-table.td>
@@ -68,9 +64,8 @@
             </c-table.td>
             <c-table.td>
                 <div class="flex items-center gap-1.5">
-                    <c-ui.icon name="activity" class="text-xs text-primary-500 dark:text-brandAccent" />
                     <span class="font-bold text-xs text-slate-800 dark:text-white">{{ u.total_api_requests|default:0 }}</span>
-                    <span class="text-[11px] text-slate-400 dark:text-brandMuted">reqs</span>
+                    <span class="text-[11px] text-slate-400 dark:text-brandMuted">requests</span>
                 </div>
             </c-table.td>
             <c-table.td>

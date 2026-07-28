@@ -74,9 +74,11 @@ def recent_queries_table(request):
 
     page_obj.object_list = formatted_items
 
+
     context = {
         'page_obj': page_obj,
         'api_filter': api_filter,
+        'total': page_obj.paginator.count
     }
     return render(request, 'dashboard/partials/_recent_queries_table.html', context)
 
@@ -138,7 +140,10 @@ def home(request):
         donut_labels.append(item['service_name'])
         donut_series.append(item['total'])
 
+    total_logs = ApiRequestLog.objects.filter(user=request.user).count()
+
     context = {
+        'total': total_logs,
         'usage': usage_summary,
         'api_token': api_token,
         'exchange_rate': exchange_rate,

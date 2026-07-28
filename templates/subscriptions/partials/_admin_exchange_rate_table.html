@@ -13,8 +13,7 @@
         <tr>
             <c-table.td>
                 <div class="flex items-center gap-2">
-                    <c-ui.icon name="calendar" class="text-slate-400 dark:text-brandMuted text-xs" />
-                    <span class="font-bold text-xs text-slate-800 dark:text-white">{{ r.date|date:"d/m/Y" }}</span>
+                    <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ r.date|date:"d/m/Y" }}</span>
                 </div>
             </c-table.td>
             <c-table.td>
@@ -28,10 +27,7 @@
                 </span>
             </c-table.td>
             <c-table.td>
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-brandHover text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-brandHover">
-                    <c-ui.icon name="database" class="text-xs text-primary-500" />
-                    {{ r.source }}
-                </span>
+                <span class="font-semibold text-xs text-slate-800 dark:text-white">{{ r.source }}</span>
             </c-table.td>
             <c-table.td>
                 <div class="flex flex-col">
