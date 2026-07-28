@@ -90,7 +90,7 @@ def history_payment_list(request):
         'payment_proof_filter': payment_proof_filter,
     }
 
-    if request.headers.get('HX-Request'):
+    if request.headers.get('HX-Request') and not request.headers.get('HX-Boosted'):
         return render(
             request,
             "subscriptions/partials/_history_payment_table.html",
@@ -114,7 +114,7 @@ def admin_payment_list(request):
         'payment_proof_filter': payment_proof_filter,
     }
 
-    if request.headers.get('HX-Request'):
+    if request.headers.get('HX-Request') and not request.headers.get('HX-Boosted'):
         return render(
             request,
             "subscriptions/partials/_admin_payment_table.html",
@@ -259,7 +259,7 @@ def admin_user_list(request):
         'donut_series_json': json.dumps(donut_series),
     }
 
-    if request.headers.get('HX-Request'):
+    if request.headers.get('HX-Request') and not request.headers.get('HX-Boosted'):
         return render(
             request,
             "subscriptions/partials/_admin_user_table.html",
@@ -283,7 +283,7 @@ def admin_exchange_rate_list(request):
         'rate_filter': rate_filter,
     }
 
-    if request.headers.get('HX-Request'):
+    if request.headers.get('HX-Request') and not request.headers.get('HX-Boosted'):
         return render(
             request,
             "subscriptions/partials/_admin_exchange_rate_table.html",
@@ -307,7 +307,7 @@ def admin_ruc_query_list(request):
         'ruc_filter': ruc_filter,
     }
 
-    if request.headers.get('HX-Request'):
+    if request.headers.get('HX-Request') and not request.headers.get('HX-Boosted'):
         return render(
             request,
             "subscriptions/partials/_admin_ruc_query_table.html",

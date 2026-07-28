@@ -8,7 +8,7 @@ from .forms import UserProfileForm
 
 @login_required
 def settings_profile(request):
-    if request.headers.get('HX-Request'):
+    if request.headers.get('HX-Request') and not request.headers.get('HX-Boosted'):
         return render(request, 'settings/partials/profile_detail.html')
     return render(request, 'settings/profile.html')
 
